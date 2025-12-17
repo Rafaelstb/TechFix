@@ -1,0 +1,657 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2865
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww12720\viewh7800\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="pt-PT">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>TechFix - Gest\'e3o de Assist\'eancia</title>\
+    <script src="https://cdn.tailwindcss.com"></script>\
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">\
+    <style>\
+        body \{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; \}\
+        .hidden \{ display: none; \}\
+        .fade-in \{ animation: fadeIn 0.3s ease-in; \}\
+        @keyframes fadeIn \{ from \{ opacity: 0; \} to \{ opacity: 1; \} \}\
+\
+        /* Estilos de Impress\'e3o */\
+        @media print \{\
+            body * \{ visibility: hidden; \}\
+            #printable-area, #printable-area * \{ visibility: visible; \}\
+            #printable-area \{ position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; \}\
+            .no-print \{ display: none !important; \}\
+        \}\
+    </style>\
+</head>\
+<body class="bg-gray-100 text-gray-800 h-screen flex overflow-hidden">\
+\
+    <!-- \'c1rea de Impress\'e3o (Invis\'edvel normalmente) -->\
+    <div id="printable-area" class="hidden bg-white text-black p-8">\
+        <!-- O conte\'fado a ser impresso ser\'e1 injetado aqui via JS -->\
+    </div>\
+\
+    <!-- Sidebar -->\
+    <aside class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex no-print">\
+        <div class="p-6 flex items-center gap-3 border-b border-slate-700">\
+            <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-wrench"></i></div>\
+            <h1 class="text-xl font-bold">TechFix</h1>\
+        </div>\
+        <nav class="flex-1 p-4 space-y-2">\
+            <button onclick="showPage('dashboard')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition">\
+                <i class="fas fa-chart-line w-6"></i> Vis\'e3o Geral\
+            </button>\
+            <button onclick="showPage('clients')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition">\
+                <i class="fas fa-users w-6"></i> Clientes\
+            </button>\
+            <button onclick="showPage('orders')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition">\
+                <i class="fas fa-laptop-medical w-6"></i> Ordens (OS)\
+            </button>\
+            <hr class="border-slate-700 my-2">\
+            <button onclick="showPage('settings')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition text-slate-400 hover:text-white">\
+                <i class="fas fa-cog w-6"></i> Configura\'e7\'f5es\
+            </button>\
+        </nav>\
+    </aside>\
+\
+    <!-- Mobile Header -->\
+    <div class="md:hidden fixed w-full bg-slate-900 text-white z-50 p-4 flex justify-between items-center no-print">\
+        <div class="flex items-center gap-2">\
+            <i class="fas fa-wrench text-blue-500"></i> <span class="font-bold">TechFix</span>\
+        </div>\
+        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"><i class="fas fa-bars"></i></button>\
+    </div>\
+    <!-- Mobile Menu -->\
+    <div id="mobile-menu" class="hidden fixed top-14 left-0 w-full bg-slate-800 text-white z-40 p-4 shadow-lg md:hidden no-print">\
+        <button onclick="showPage('dashboard'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700">Vis\'e3o Geral</button>\
+        <button onclick="showPage('clients'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700">Clientes</button>\
+        <button onclick="showPage('orders'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700">Ordens (OS)</button>\
+        <button onclick="showPage('settings'); toggleMobileMenu()" class="block w-full text-left p-3 text-gray-400">Configura\'e7\'f5es</button>\
+    </div>\
+\
+    <!-- Main Content -->\
+    <main class="flex-1 flex flex-col h-full overflow-auto pt-16 md:pt-0 no-print">\
+        <header class="bg-white p-6 shadow-sm flex justify-between items-center">\
+            <h2 id="page-title" class="text-2xl font-bold text-gray-700">Vis\'e3o Geral</h2>\
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">TF</div>\
+        </header>\
+\
+        <div class="p-6 flex-1 overflow-auto">\
+            \
+            <!-- PAGINA: DASHBOARD -->\
+            <div id="dashboard" class="page fade-in">\
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">\
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 flex justify-between items-center">\
+                        <div>\
+                            <p class="text-gray-500">Ordens Abertas</p>\
+                            <p class="text-3xl font-bold" id="dash-open-count">0</p>\
+                        </div>\
+                        <i class="fas fa-clipboard-list text-3xl text-blue-200"></i>\
+                    </div>\
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex justify-between items-center">\
+                        <div>\
+                            <p class="text-gray-500">Prontos</p>\
+                            <p class="text-3xl font-bold" id="dash-ready-count">0</p>\
+                        </div>\
+                        <i class="fas fa-check-circle text-3xl text-green-200"></i>\
+                    </div>\
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500 flex justify-between items-center">\
+                        <div>\
+                            <p class="text-gray-500">Clientes</p>\
+                            <p class="text-3xl font-bold" id="dash-client-count">0</p>\
+                        </div>\
+                        <i class="fas fa-users text-3xl text-purple-200"></i>\
+                    </div>\
+                </div>\
+                \
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 text-center">\
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Bem-vindo ao TechFix</h3>\
+                    <p class="text-blue-600">Configure os dados da sua empresa no menu "Configura\'e7\'f5es" para personalizar os relat\'f3rios.</p>\
+                    <button onclick="showPage('orders')" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">\
+                        Come\'e7ar Agora\
+                    </button>\
+                </div>\
+            </div>\
+\
+            <!-- PAGINA: CLIENTES -->\
+            <div id="clients" class="page hidden fade-in">\
+                <div class="flex justify-between mb-6">\
+                    <h3 class="text-lg font-semibold">Lista de Clientes</h3>\
+                    <button onclick="toggleModal('modal-client')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">\
+                        <i class="fas fa-plus mr-2"></i> Novo Cliente\
+                    </button>\
+                </div>\
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">\
+                    <table class="w-full text-left">\
+                        <thead class="bg-gray-50 border-b">\
+                            <tr>\
+                                <th class="p-4">Nome</th>\
+                                <th class="p-4">Telefone</th>\
+                                <th class="p-4 hidden md:table-cell">Email</th>\
+                                <th class="p-4">A\'e7\'e3o</th>\
+                            </tr>\
+                        </thead>\
+                        <tbody id="clients-list" class="divide-y"></tbody>\
+                    </table>\
+                    <p id="no-clients-msg" class="p-8 text-center text-gray-400">Nenhum cliente cadastrado.</p>\
+                </div>\
+            </div>\
+\
+            <!-- PAGINA: ORDENS -->\
+            <div id="orders" class="page hidden fade-in">\
+                <div class="flex justify-between mb-6">\
+                    <h3 class="text-lg font-semibold">Ordens de Servi\'e7o</h3>\
+                    <button onclick="openNewOrderModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">\
+                        <i class="fas fa-plus mr-2"></i> Nova OS\
+                    </button>\
+                </div>\
+                <div id="orders-list" class="grid grid-cols-1 gap-4"></div>\
+                <p id="no-orders-msg" class="p-8 text-center text-gray-400 hidden">Nenhuma ordem encontrada.</p>\
+            </div>\
+\
+            <!-- PAGINA: CONFIGURA\'c7\'d5ES E DADOS -->\
+            <div id="settings" class="page hidden fade-in space-y-8">\
+                \
+                <!-- Dados da Empresa -->\
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">\
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2 text-slate-800">\
+                        <i class="fas fa-building text-blue-600"></i> Dados da Empresa (Para o Relat\'f3rio)\
+                    </h3>\
+                    <form onsubmit="saveCompanySettings(event)" class="space-y-4">\
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">\
+                            <div>\
+                                <label class="block text-sm font-medium mb-1">Nome da Empresa</label>\
+                                <input type="text" id="conf-company-name" class="w-full p-2 border rounded" placeholder="Ex: TechFix Inform\'e1tica">\
+                            </div>\
+                            <div>\
+                                <label class="block text-sm font-medium mb-1">Telefone / Contato</label>\
+                                <input type="text" id="conf-company-phone" class="w-full p-2 border rounded" placeholder="Ex: (00) 9999-9999">\
+                            </div>\
+                        </div>\
+                        <div>\
+                            <label class="block text-sm font-medium mb-1">Endere\'e7o Completo</label>\
+                            <input type="text" id="conf-company-address" class="w-full p-2 border rounded" placeholder="Rua Exemplo, 123 - Centro">\
+                        </div>\
+                        <div>\
+                            <label class="block text-sm font-medium mb-1">Mensagem de Rodap\'e9</label>\
+                            <input type="text" id="conf-company-footer" class="w-full p-2 border rounded" placeholder="Ex: Agradecemos a prefer\'eancia! Garantia de 90 dias.">\
+                        </div>\
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Salvar Dados da Empresa</button>\
+                    </form>\
+                </div>\
+\
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">\
+                    <!-- Backup -->\
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">\
+                        <h4 class="font-bold text-lg mb-2 text-indigo-600"><i class="fas fa-download mr-2"></i>Backup</h4>\
+                        <p class="text-gray-600 text-sm mb-4">Baixe seus dados para n\'e3o perder nada.</p>\
+                        <button onclick="downloadBackup()" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 font-bold">Baixar Dados</button>\
+                    </div>\
+                    <!-- Restaurar -->\
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">\
+                        <h4 class="font-bold text-lg mb-2 text-orange-600"><i class="fas fa-upload mr-2"></i>Restaurar</h4>\
+                        <p class="text-gray-600 text-sm mb-4">Recupere dados de um arquivo salvo.</p>\
+                        <input type="file" id="file-input" class="hidden" onchange="restoreBackup(this)">\
+                        <button onclick="document.getElementById('file-input').click()" class="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700 font-bold">Selecionar Arquivo</button>\
+                    </div>\
+                </div>\
+\
+                <div class="bg-red-50 p-4 rounded-xl border border-red-200">\
+                    <button onclick="clearAllData()" class="text-red-600 font-bold text-sm hover:underline">Apagar todos os dados e resetar</button>\
+                </div>\
+            </div>\
+\
+        </div>\
+    </main>\
+\
+    <!-- MODAL: NOVO CLIENTE -->\
+    <div id="modal-client" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">\
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">\
+            <div class="bg-gray-50 p-4 border-b flex justify-between items-center">\
+                <h3 class="font-bold">Novo Cliente</h3>\
+                <button onclick="toggleModal('modal-client')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>\
+            </div>\
+            <form onsubmit="saveClient(event)" class="p-6 space-y-4">\
+                <input type="text" id="client-name" placeholder="Nome Completo" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">\
+                <input type="text" id="client-phone" placeholder="Telefone / WhatsApp (Apenas n\'fameros para o link)" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">\
+                <input type="email" id="client-email" placeholder="Email (Opcional)" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">\
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold">Salvar Cliente</button>\
+            </form>\
+        </div>\
+    </div>\
+\
+    <!-- MODAL: NOVA ORDEM -->\
+    <div id="modal-order" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">\
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">\
+            <div class="bg-gray-50 p-4 border-b flex justify-between items-center">\
+                <h3 class="font-bold">Nova Ordem de Servi\'e7o</h3>\
+                <button onclick="toggleModal('modal-order')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>\
+            </div>\
+            <form onsubmit="saveOrder(event)" class="p-6 space-y-4">\
+                <div>\
+                    <label class="block text-sm font-medium mb-1">Cliente</label>\
+                    <select id="order-client" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white">\
+                        <option value="">Selecione...</option>\
+                    </select>\
+                </div>\
+                <div class="grid grid-cols-2 gap-4">\
+                    <input type="text" id="order-device" placeholder="Modelo do Notebook" required class="w-full p-2 border rounded">\
+                    <input type="text" id="order-serial" placeholder="N\'ba S\'e9rie (Opcional)" class="w-full p-2 border rounded">\
+                </div>\
+                <textarea id="order-defect" rows="2" placeholder="Descri\'e7\'e3o do Defeito..." required class="w-full p-2 border rounded"></textarea>\
+                <div class="grid grid-cols-2 gap-4">\
+                    <input type="text" id="order-accessories" placeholder="Acess\'f3rios (Fonte, Mouse...)" class="w-full p-2 border rounded">\
+                    <input type="text" id="order-password" placeholder="Senha do Sistema" class="w-full p-2 border rounded">\
+                </div>\
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold">Criar Ordem</button>\
+            </form>\
+        </div>\
+    </div>\
+\
+    <!-- MODAL: SUCESSO DA ORDEM -->\
+    <div id="modal-success" class="fixed inset-0 bg-black bg-opacity-60 hidden z-[60] flex items-center justify-center p-4">\
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center p-6">\
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600 text-3xl">\
+                <i class="fas fa-check"></i>\
+            </div>\
+            <h3 class="text-xl font-bold mb-2">OS Criada com Sucesso!</h3>\
+            <p class="text-gray-600 mb-6">O que deseja fazer agora?</p>\
+            \
+            <div class="space-y-3">\
+                <button id="btn-print-now" class="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-900 flex items-center justify-center gap-2">\
+                    <i class="fas fa-print"></i> Imprimir Relat\'f3rio\
+                </button>\
+                <button id="btn-whatsapp-now" class="w-full bg-green-500 text-white py-3 rounded-lg font-bold hover:bg-green-600 flex items-center justify-center gap-2">\
+                    <i class="fab fa-whatsapp"></i> Enviar no WhatsApp\
+                </button>\
+                <button onclick="toggleModal('modal-success')" class="w-full text-gray-500 py-2 hover:text-gray-700">\
+                    Fechar\
+                </button>\
+            </div>\
+        </div>\
+    </div>\
+\
+    <script>\
+        // --- GERENCIAMENTO DE DADOS (LOCALSTORAGE) ---\
+        const DB_KEY = 'techfix_data_v3'; // Atualizei para v3 para carregar os novos dados da Infosupri\
+        \
+        const initialData = \{\
+            clients: [],\
+            orders: [],\
+            company: \{\
+                name: 'Infosupri - RD suprimentos de informatica LTDA',\
+                phone: '3021-5940',\
+                address: 'Rua Rep\'fablica da Arm\'eania, 1312 - CNPJ: 07.079.968/0001-02',\
+                footer: 'Obrigado pela prefer\'eancia!'\
+            \}\
+        \};\
+\
+        let db = JSON.parse(localStorage.getItem(DB_KEY));\
+        \
+        // Migra\'e7\'e3o simples ou inicializa\'e7\'e3o\
+        if (!db) \{\
+            // Tenta recuperar da vers\'e3o antiga (v2 ou v1) para n\'e3o perder clientes\
+            const oldDbV2 = JSON.parse(localStorage.getItem('techfix_data_v2'));\
+            const oldDbV1 = JSON.parse(localStorage.getItem('techfix_data_v1'));\
+            \
+            if(oldDbV2) \{\
+                // Mant\'e9m clientes/ordens antigos, mas usa os novos dados da empresa\
+                db = \{ ...initialData, clients: oldDbV2.clients, orders: oldDbV2.orders \};\
+            \} else if(oldDbV1) \{\
+                db = \{ ...initialData, clients: oldDbV1.clients, orders: oldDbV1.orders \};\
+            \} else \{\
+                db = initialData;\
+            \}\
+            saveDB();\
+        \} else if (!db.company) \{\
+            db.company = initialData.company;\
+            saveDB();\
+        \}\
+\
+        function saveDB() \{\
+            localStorage.setItem(DB_KEY, JSON.stringify(db));\
+            renderDashboard();\
+        \}\
+\
+        // --- NAVEGA\'c7\'c3O ---\
+        function showPage(pageId) \{\
+            document.querySelectorAll('.page').forEach(el => el.classList.add('hidden'));\
+            document.getElementById(pageId).classList.remove('hidden');\
+            \
+            const titles = \{ \
+                'dashboard': 'Vis\'e3o Geral', \
+                'clients': 'Clientes', \
+                'orders': 'Ordens de Servi\'e7o',\
+                'settings': 'Configura\'e7\'f5es'\
+            \};\
+            document.getElementById('page-title').innerText = titles[pageId];\
+            \
+            if(pageId === 'clients') renderClients();\
+            if(pageId === 'orders') renderOrders();\
+            if(pageId === 'settings') loadCompanySettings();\
+        \}\
+\
+        function toggleMobileMenu() \{\
+            document.getElementById('mobile-menu').classList.add('hidden');\
+        \}\
+\
+        function toggleModal(modalId) \{\
+            const el = document.getElementById(modalId);\
+            el.classList.toggle('hidden');\
+        \}\
+\
+        // --- CONFIGURA\'c7\'d5ES DA EMPRESA ---\
+        function loadCompanySettings() \{\
+            document.getElementById('conf-company-name').value = db.company.name || '';\
+            document.getElementById('conf-company-phone').value = db.company.phone || '';\
+            document.getElementById('conf-company-address').value = db.company.address || '';\
+            document.getElementById('conf-company-footer').value = db.company.footer || '';\
+        \}\
+\
+        function saveCompanySettings(e) \{\
+            e.preventDefault();\
+            db.company = \{\
+                name: document.getElementById('conf-company-name').value,\
+                phone: document.getElementById('conf-company-phone').value,\
+                address: document.getElementById('conf-company-address').value,\
+                footer: document.getElementById('conf-company-footer').value\
+            \};\
+            saveDB();\
+            alert("Dados da empresa salvos com sucesso!");\
+        \}\
+\
+        // --- L\'d3GICA DE CLIENTES ---\
+        function renderClients() \{\
+            const tbody = document.getElementById('clients-list');\
+            tbody.innerHTML = '';\
+            \
+            if (db.clients.length === 0) \{\
+                document.getElementById('no-clients-msg').classList.remove('hidden');\
+                return;\
+            \}\
+            document.getElementById('no-clients-msg').classList.add('hidden');\
+\
+            db.clients.forEach(c => \{\
+                const tr = document.createElement('tr');\
+                tr.className = 'hover:bg-gray-50 border-b last:border-0';\
+                tr.innerHTML = `\
+                    <td class="p-4 font-medium">$\{c.name\}</td>\
+                    <td class="p-4">$\{c.phone\}</td>\
+                    <td class="p-4 hidden md:table-cell text-gray-500">$\{c.email\}</td>\
+                    <td class="p-4">\
+                        <button onclick="preSelectClient($\{c.id\})" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">\
+                            Abrir OS\
+                        </button>\
+                    </td>\
+                `;\
+                tbody.appendChild(tr);\
+            \});\
+        \}\
+\
+        function saveClient(e) \{\
+            e.preventDefault();\
+            const name = document.getElementById('client-name').value;\
+            const phone = document.getElementById('client-phone').value;\
+            const email = document.getElementById('client-email').value;\
+\
+            db.clients.push(\{ id: Date.now(), name, phone, email \});\
+            saveDB();\
+\
+            e.target.reset();\
+            toggleModal('modal-client');\
+            renderClients();\
+            alert('Cliente salvo com sucesso!');\
+        \}\
+\
+        // --- L\'d3GICA DE ORDENS ---\
+        function renderOrders() \{\
+            const container = document.getElementById('orders-list');\
+            container.innerHTML = '';\
+\
+            if (db.orders.length === 0) \{\
+                document.getElementById('no-orders-msg').classList.remove('hidden');\
+                return;\
+            \}\
+            document.getElementById('no-orders-msg').classList.add('hidden');\
+\
+            const sortedOrders = [...db.orders].sort((a,b) => b.id - a.id);\
+\
+            sortedOrders.forEach(o => \{\
+                const client = db.clients.find(c => c.id == o.clientId) || \{ name: 'Desconhecido', phone: '-' \};\
+                \
+                let statusClass = 'bg-yellow-100 text-yellow-800';\
+                if(o.status === 'aprovado') statusClass = 'bg-blue-100 text-blue-800';\
+                if(o.status === 'pronto') statusClass = 'bg-green-100 text-green-800';\
+\
+                const div = document.createElement('div');\
+                div.className = 'bg-white p-5 rounded-xl shadow-sm border border-slate-200';\
+                div.innerHTML = `\
+                    <div class="flex flex-col md:flex-row justify-between items-start mb-2 gap-2">\
+                        <div>\
+                            <span class="font-bold text-lg text-slate-700">OS #$\{o.id\}</span>\
+                            <span class="text-xs text-gray-400 ml-2">$\{o.date\}</span>\
+                        </div>\
+                        <div class="flex gap-2 flex-wrap">\
+                             <button onclick="sendWhatsApp($\{o.id\})" class="text-green-600 hover:text-green-800 border border-green-200 bg-green-50 px-2 py-1 rounded text-xs flex items-center gap-1">\
+                                <i class="fab fa-whatsapp"></i> Enviar\
+                            </button>\
+                             <button onclick="printOrder($\{o.id\})" class="text-slate-500 hover:text-slate-800 border px-2 py-1 rounded text-xs flex items-center gap-1">\
+                                <i class="fas fa-print"></i> Imprimir\
+                            </button>\
+                            <select onchange="updateStatus($\{o.id\}, this.value)" class="text-xs p-1 rounded border $\{statusClass\}">\
+                                <option value="analise" $\{o.status === 'analise' ? 'selected' : ''\}>Em An\'e1lise</option>\
+                                <option value="aprovado" $\{o.status === 'aprovado' ? 'selected' : ''\}>Aprovado</option>\
+                                <option value="pronto" $\{o.status === 'pronto' ? 'selected' : ''\}>Pronto</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                    <div class="mb-3">\
+                        <h4 class="font-bold text-blue-600"><i class="fas fa-laptop mr-1"></i> $\{o.device\}</h4>\
+                        <p class="text-sm text-gray-600">Cliente: <b>$\{client.name\}</b></p>\
+                    </div>\
+                    <div class="bg-gray-50 p-3 rounded text-sm text-gray-700 space-y-1">\
+                        <p><strong>Defeito:</strong> $\{o.defect\}</p>\
+                        $\{o.accessories ? `<p class="text-xs text-gray-500">Acess\'f3rios: $\{o.accessories\}</p>` : ''\}\
+                    </div>\
+                `;\
+                container.appendChild(div);\
+            \});\
+        \}\
+\
+        function openNewOrderModal() \{\
+            const select = document.getElementById('order-client');\
+            select.innerHTML = '<option value="">Selecione o Cliente...</option>';\
+            db.clients.forEach(c => \{\
+                const opt = document.createElement('option');\
+                opt.value = c.id;\
+                opt.innerText = c.name;\
+                select.appendChild(opt);\
+            \});\
+            \
+            if (db.clients.length === 0) \{\
+                alert("Cadastre um cliente primeiro!");\
+                showPage('clients');\
+                return;\
+            \}\
+            toggleModal('modal-order');\
+        \}\
+\
+        function preSelectClient(clientId) \{\
+            showPage('orders');\
+            openNewOrderModal();\
+            setTimeout(() => \{\
+                document.getElementById('order-client').value = clientId;\
+            \}, 100);\
+        \}\
+\
+        function saveOrder(e) \{\
+            e.preventDefault();\
+            const clientId = document.getElementById('order-client').value;\
+            const newOrder = \{\
+                id: Math.floor(Math.random() * 9000) + 1000,\
+                clientId,\
+                device: document.getElementById('order-device').value,\
+                defect: document.getElementById('order-defect').value,\
+                accessories: document.getElementById('order-accessories').value,\
+                password: document.getElementById('order-password').value,\
+                serial: document.getElementById('order-serial').value,\
+                status: 'analise',\
+                date: new Date().toLocaleDateString('pt-PT')\
+            \};\
+\
+            db.orders.push(newOrder);\
+            saveDB();\
+            e.target.reset();\
+            toggleModal('modal-order');\
+            renderOrders();\
+\
+            // Abre modal de sucesso com op\'e7\'f5es\
+            const btnPrint = document.getElementById('btn-print-now');\
+            const btnWhats = document.getElementById('btn-whatsapp-now');\
+            \
+            btnPrint.onclick = () => \{ toggleModal('modal-success'); printOrder(newOrder.id); \};\
+            btnWhats.onclick = () => \{ toggleModal('modal-success'); sendWhatsApp(newOrder.id); \};\
+            \
+            toggleModal('modal-success');\
+        \}\
+\
+        function updateStatus(id, newStatus) \{\
+            const order = db.orders.find(o => o.id == id);\
+            if(order) \{\
+                order.status = newStatus;\
+                saveDB();\
+                renderDashboard();\
+                renderOrders();\
+            \}\
+        \}\
+\
+        // --- FUN\'c7\'d5ES DE A\'c7\'c3O (IMPRIMIR / WHATSAPP) ---\
+        function printOrder(orderId) \{\
+            const order = db.orders.find(o => o.id == orderId);\
+            const client = db.clients.find(c => c.id == order.clientId) || \{\};\
+            const company = db.company;\
+\
+            const printContent = `\
+                <div style="border: 1px solid #000; padding: 40px; font-family: 'Courier New', Courier, monospace; max-width: 800px; margin: 0 auto;">\
+                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px;">\
+                        <h1 style="margin: 0; font-size: 28px; font-weight: bold;">$\{company.name.toUpperCase()\}</h1>\
+                        <p style="margin: 5px 0;">$\{company.phone\}</p>\
+                        <p style="margin: 5px 0; font-size: 12px;">$\{company.address\}</p>\
+                    </div>\
+                    \
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">\
+                        <div>\
+                            <h2 style="font-size: 20px; margin: 0;">ORDEM DE SERVI\'c7O</h2>\
+                            <p style="font-size: 18px; font-weight: bold;">#$\{order.id\}</p>\
+                        </div>\
+                        <div style="text-align: right;">\
+                            <p><strong>Data:</strong> $\{order.date\}</p>\
+                            <p><strong>Status:</strong> $\{order.status.toUpperCase()\}</p>\
+                        </div>\
+                    </div>\
+\
+                    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px;">\
+                        <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">CLIENTE</h3>\
+                        <p><strong>Nome:</strong> $\{client.name\}</p>\
+                        <p><strong>Telefone:</strong> $\{client.phone\}</p>\
+                        <p><strong>Email:</strong> $\{client.email || '-'\}</p>\
+                    </div>\
+\
+                    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px;">\
+                        <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">EQUIPAMENTO</h3>\
+                        <p><strong>Modelo:</strong> $\{order.device\}</p>\
+                        <p><strong>Serial:</strong> $\{order.serial || '-'\}</p>\
+                        <p><strong>Acess\'f3rios:</strong> $\{order.accessories || 'Nenhum'\}</p>\
+                        $\{order.password ? `<p><strong>Senha:</strong> $\{order.password\}</p>` : ''\}\
+                    </div>\
+\
+                    <div style="margin-bottom: 40px; border: 1px solid #ccc; padding: 15px; background: #f9f9f9;">\
+                        <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">DEFEITO RELATADO</h3>\
+                        <p style="font-size: 16px;">$\{order.defect\}</p>\
+                    </div>\
+\
+                    <div style="margin-top: 60px; display: flex; justify-content: space-between;">\
+                        <div style="text-align: center; width: 45%;">\
+                            <div style="border-top: 1px solid #000; margin-bottom: 5px;"></div>\
+                            Assinatura da Empresa\
+                        </div>\
+                        <div style="text-align: center; width: 45%;">\
+                            <div style="border-top: 1px solid #000; margin-bottom: 5px;"></div>\
+                            Assinatura do Cliente\
+                        </div>\
+                    </div>\
+                    \
+                    <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #666;">\
+                        <p>$\{company.footer\}</p>\
+                    </div>\
+                </div>\
+            `;\
+\
+            document.getElementById('printable-area').innerHTML = printContent;\
+            window.print();\
+        \}\
+\
+        function sendWhatsApp(orderId) \{\
+            const order = db.orders.find(o => o.id == orderId);\
+            const client = db.clients.find(c => c.id == order.clientId) || \{\};\
+            const company = db.company;\
+\
+            // Limpa o telefone para ficar apenas n\'fameros\
+            const phone = client.phone.replace(/\\D/g, '');\
+            \
+            if (phone.length < 10) \{\
+                alert("O telefone do cliente parece inv\'e1lido para WhatsApp.");\
+                return;\
+            \}\
+\
+            const text = `*$\{company.name\} - Ordem de Servi\'e7o*\\n\\n` +\
+                `Ol\'e1 *$\{client.name\}*! Aqui est\'e3o os detalhes da sua OS:\\n\\n` +\
+                `\uc0\u55357 \u56523  *OS:* #$\{order.id\}\\n` +\
+                `\uc0\u55357 \u56517  *Data:* $\{order.date\}\\n` +\
+                `\uc0\u55357 \u56507  *Equipamento:* $\{order.device\}\\n` +\
+                `\uc0\u9888 \u65039  *Defeito:* $\{order.defect\}\\n` +\
+                `\uc0\u55357 \u56522  *Status:* $\{order.status.toUpperCase()\}\\n\\n` +\
+                `$\{company.footer\}`;\
+\
+            const url = `https://wa.me/55$\{phone\}?text=$\{encodeURIComponent(text)\}`;\
+            window.open(url, '_blank');\
+        \}\
+\
+        // --- BACKUP ---\
+        function downloadBackup() \{\
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));\
+            const node = document.createElement('a');\
+            node.setAttribute("href", dataStr);\
+            node.setAttribute("download", "backup_techfix.json");\
+            document.body.appendChild(node);\
+            node.click();\
+            node.remove();\
+        \}\
+\
+        function restoreBackup(input) \{\
+            const file = input.files[0];\
+            const reader = new FileReader();\
+            reader.onload = function(e) \{\
+                try \{\
+                    db = JSON.parse(e.target.result);\
+                    saveDB();\
+                    alert("Dados restaurados!");\
+                    location.reload();\
+                \} catch(err) \{ alert("Erro no arquivo."); \}\
+            \};\
+            reader.readAsText(file);\
+        \}\
+\
+        function clearAllData() \{\
+            if(confirm("Apagar TUDO?")) \{ localStorage.removeItem(DB_KEY); location.reload(); \}\
+        \}\
+\
+        // Render inicial\
+        renderDashboard();\
+    </script>\
+</body>\
+</html>}
