@@ -112,17 +112,24 @@
 
             <!-- PAGINA: CLIENTES -->
             <div id="clients" class="page hidden fade-in">
-                <div class="flex justify-between mb-6">
-                    <h3 class="text-lg font-semibold">Lista de Clientes</h3>
-                    <button onclick="openClientModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                        <i class="fas fa-plus mr-2"></i> Novo Cliente
-                    </button>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <h3 class="text-lg font-semibold w-full md:w-auto">Lista de Clientes</h3>
+                    <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                        <div class="relative">
+                            <input type="text" id="search-client" oninput="renderClients()" placeholder="Buscar nome, CPF, email..." class="w-full md:w-64 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-xs"></i>
+                        </div>
+                        <button onclick="openClientModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition whitespace-nowrap">
+                            <i class="fas fa-plus mr-2"></i> Novo Cliente
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                     <table class="w-full text-left">
                         <thead class="bg-gray-50 border-b">
                             <tr>
-                                <th class="p-4 w-1/3">Nome</th>
+                                <th class="p-4 w-1/4">Nome</th>
+                                <th class="p-4 hidden md:table-cell">CPF/CNPJ</th>
                                 <th class="p-4 w-1/4">Telefone</th>
                                 <th class="p-4 hidden md:table-cell">Email</th>
                                 <th class="p-4 text-right">Ações</th>
@@ -136,11 +143,17 @@
 
             <!-- PAGINA: ORDENS -->
             <div id="orders" class="page hidden fade-in">
-                <div class="flex justify-between mb-6">
-                    <h3 class="text-lg font-semibold">Ordens de Serviço</h3>
-                    <button onclick="openOrderModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                        <i class="fas fa-plus mr-2"></i> Nova OS
-                    </button>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <h3 class="text-lg font-semibold w-full md:w-auto">Ordens de Serviço</h3>
+                    <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                        <div class="relative">
+                            <input type="text" id="search-order" oninput="renderOrders()" placeholder="Buscar OS, Cliente, Serial..." class="w-full md:w-64 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-xs"></i>
+                        </div>
+                        <button onclick="openOrderModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition whitespace-nowrap">
+                            <i class="fas fa-plus mr-2"></i> Nova OS
+                        </button>
+                    </div>
                 </div>
                 <div id="orders-list" class="grid grid-cols-1 gap-4"></div>
                 <p id="no-orders-msg" class="p-8 text-center text-gray-400 hidden">Nenhuma ordem encontrada.</p>
@@ -210,6 +223,7 @@
             </div>
             <form id="form-client" onsubmit="saveClient(event)" class="p-6 space-y-4">
                 <input type="text" id="client-name" placeholder="Nome Completo" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="text" id="client-document" placeholder="CPF ou CNPJ" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
                 <input type="text" id="client-phone" placeholder="Telefone / WhatsApp" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
                 <input type="email" id="client-email" placeholder="Email (Opcional)" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold">Salvar Cliente</button>
@@ -245,6 +259,39 @@
         </div>
     </div>
 
+    <!-- MODAL: ORÇAMENTO -->
+    <div id="modal-budget" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
+            <div class="bg-yellow-50 p-4 border-b border-yellow-100 flex justify-between items-center">
+                <h3 class="font-bold text-yellow-800"><i class="fas fa-file-invoice-dollar mr-2"></i>Fazer Orçamento</h3>
+                <button onclick="toggleModal('modal-budget')" class="text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-gray-500">Defina os valores e envie para o cliente.</p>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Serviço a ser realizado</label>
+                    <input type="text" id="budget-service" placeholder="Ex: Troca de Tela, Formatação..." class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Valor Total (R$)</label>
+                    <input type="text" id="budget-value" placeholder="Ex: 350,00" class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-500 outline-none font-bold text-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Observações do Orçamento</label>
+                    <textarea id="budget-notes" rows="3" placeholder="Ex: Peça sob encomenda, prazo de 3 dias..." class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-500 outline-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="saveBudget()" class="w-full bg-gray-200 text-gray-800 py-2 rounded hover:bg-gray-300 font-bold">
+                        Apenas Salvar
+                    </button>
+                    <button onclick="saveAndSendBudget()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-bold flex justify-center items-center gap-2">
+                        <i class="fab fa-whatsapp"></i> Salvar e Enviar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: SUCESSO DA ORDEM -->
     <div id="modal-success" class="fixed inset-0 bg-black bg-opacity-60 hidden z-[60] flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center p-6">
@@ -275,6 +322,7 @@
         // Variáveis para controlar Edição
         let editingClientId = null;
         let editingOrderId = null;
+        let currentBudgetOrderId = null;
 
         const initialData = {
             clients: [],
@@ -374,6 +422,7 @@
             document.getElementById('client-name').value = client.name;
             document.getElementById('client-phone').value = client.phone;
             document.getElementById('client-email').value = client.email;
+            document.getElementById('client-document').value = client.document || '';
             
             document.getElementById('modal-client-title').innerText = "Editar Cliente";
             toggleModal('modal-client');
@@ -382,7 +431,6 @@
         function deleteClient(id) {
             if(confirm('Tem certeza que deseja excluir este cliente?')) {
                 db.clients = db.clients.filter(c => c.id !== id);
-                // Opcional: Avisar se tiver ordens vinculadas, mas vamos simplificar
                 saveDB();
                 renderClients();
             }
@@ -393,42 +441,50 @@
             const name = document.getElementById('client-name').value;
             const phone = document.getElementById('client-phone').value;
             const email = document.getElementById('client-email').value;
+            const doc = document.getElementById('client-document').value;
 
             if (editingClientId) {
-                // Atualizar Existente
                 const index = db.clients.findIndex(c => c.id === editingClientId);
                 if (index !== -1) {
-                    db.clients[index] = { ...db.clients[index], name, phone, email };
+                    db.clients[index] = { ...db.clients[index], name, phone, email, document: doc };
                 }
             } else {
-                // Criar Novo
-                db.clients.push({ id: Date.now(), name, phone, email });
+                db.clients.push({ id: Date.now(), name, phone, email, document: doc });
             }
 
             saveDB();
             toggleModal('modal-client');
             renderClients();
-            // alert('Cliente salvo com sucesso!'); // Removido para ser mais fluido
         }
 
         function renderClients() {
+            const searchTerm = document.getElementById('search-client')?.value.toLowerCase() || '';
             const tbody = document.getElementById('clients-list');
             tbody.innerHTML = '';
             
-            if (db.clients.length === 0) {
+            const filteredClients = db.clients.filter(c => 
+                c.name.toLowerCase().includes(searchTerm) ||
+                c.phone.includes(searchTerm) ||
+                (c.email && c.email.toLowerCase().includes(searchTerm)) ||
+                (c.document && c.document.includes(searchTerm))
+            );
+
+            if (filteredClients.length === 0) {
                 document.getElementById('no-clients-msg').classList.remove('hidden');
+                if(searchTerm) document.getElementById('no-clients-msg').innerText = "Nenhum cliente encontrado para essa pesquisa.";
+                else document.getElementById('no-clients-msg').innerText = "Nenhum cliente cadastrado.";
                 return;
             }
             document.getElementById('no-clients-msg').classList.add('hidden');
 
-            // Ordenar alfabeticamente
-            const sortedClients = [...db.clients].sort((a,b) => a.name.localeCompare(b.name));
+            const sortedClients = [...filteredClients].sort((a,b) => a.name.localeCompare(b.name));
 
             sortedClients.forEach(c => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 border-b last:border-0';
                 tr.innerHTML = `
                     <td class="p-4 font-medium">${c.name}</td>
+                    <td class="p-4 hidden md:table-cell text-gray-500">${c.document || '-'}</td>
                     <td class="p-4">${c.phone}</td>
                     <td class="p-4 hidden md:table-cell text-gray-500">${c.email}</td>
                     <td class="p-4 text-right">
@@ -449,7 +505,7 @@
 
         // --- LÓGICA DE ORDENS ---
         function openOrderModal() {
-            editingOrderId = null; // Modo Criar
+            editingOrderId = null;
             document.getElementById('form-order').reset();
             document.getElementById('modal-order-title').innerText = "Nova Ordem de Serviço";
             
@@ -465,7 +521,6 @@
         function populateClientSelect(selectedId = null) {
             const select = document.getElementById('order-client');
             select.innerHTML = '<option value="">Selecione o Cliente...</option>';
-            // Ordenar clientes no select também
             const sortedClients = [...db.clients].sort((a,b) => a.name.localeCompare(b.name));
             
             sortedClients.forEach(c => {
@@ -481,7 +536,7 @@
             const order = db.orders.find(o => o.id === id);
             if (!order) return;
 
-            editingOrderId = id; // Modo Editar
+            editingOrderId = id;
             document.getElementById('modal-order-title').innerText = "Editar OS #" + id;
 
             populateClientSelect(order.clientId);
@@ -504,7 +559,7 @@
 
         function preSelectClient(clientId) {
             showPage('orders');
-            openOrderModal(); // Chama a função que reseta e prepara
+            openOrderModal();
             setTimeout(() => {
                 document.getElementById('order-client').value = clientId;
             }, 50);
@@ -522,17 +577,18 @@
             let savedId;
 
             if (editingOrderId) {
-                // Atualizar
                 const index = db.orders.findIndex(o => o.id === editingOrderId);
                 if (index !== -1) {
+                    // Mantém o orçamento existente se houver
+                    const existingBudget = db.orders[index].budget || null;
                     db.orders[index] = { 
                         ...db.orders[index], 
-                        clientId, device, defect, accessories, password, serial 
+                        clientId, device, defect, accessories, password, serial,
+                        budget: existingBudget
                     };
                     savedId = editingOrderId;
                 }
             } else {
-                // Criar
                 const newId = Math.floor(Math.random() * 9000) + 1000;
                 savedId = newId;
                 db.orders.push({
@@ -544,7 +600,8 @@
                     password,
                     serial,
                     status: 'analise',
-                    date: new Date().toLocaleDateString('pt-PT')
+                    date: new Date().toLocaleDateString('pt-PT'),
+                    budget: null
                 });
             }
 
@@ -552,8 +609,6 @@
             toggleModal('modal-order');
             renderOrders();
 
-            // Abre modal de sucesso/ação apenas se for NOVO ou se quiser confirmar
-            // Vamos abrir sempre para facilitar a impressão após edição também
             const btnPrint = document.getElementById('btn-print-now');
             const btnWhats = document.getElementById('btn-whatsapp-now');
             
@@ -564,16 +619,29 @@
         }
 
         function renderOrders() {
+            const searchTerm = document.getElementById('search-order')?.value.toLowerCase() || '';
             const container = document.getElementById('orders-list');
             container.innerHTML = '';
 
-            if (db.orders.length === 0) {
+            const filteredOrders = db.orders.filter(o => {
+                const client = db.clients.find(c => c.id == o.clientId) || { name: '' };
+                return (
+                    o.id.toString().includes(searchTerm) ||
+                    o.device.toLowerCase().includes(searchTerm) ||
+                    client.name.toLowerCase().includes(searchTerm) ||
+                    (o.serial && o.serial.toLowerCase().includes(searchTerm))
+                );
+            });
+
+            if (filteredOrders.length === 0) {
                 document.getElementById('no-orders-msg').classList.remove('hidden');
+                if(searchTerm) document.getElementById('no-orders-msg').innerText = "Nenhuma ordem encontrada para essa pesquisa.";
+                else document.getElementById('no-orders-msg').innerText = "Nenhuma ordem encontrada.";
                 return;
             }
             document.getElementById('no-orders-msg').classList.add('hidden');
 
-            const sortedOrders = [...db.orders].sort((a,b) => b.id - a.id);
+            const sortedOrders = [...filteredOrders].sort((a,b) => b.id - a.id);
 
             sortedOrders.forEach(o => {
                 const client = db.clients.find(c => c.id == o.clientId) || { name: 'Desconhecido', phone: '-' };
@@ -582,15 +650,24 @@
                 if(o.status === 'aprovado') statusClass = 'bg-blue-100 text-blue-800';
                 if(o.status === 'pronto') statusClass = 'bg-green-100 text-green-800';
 
+                // Adicionar crachá de orçamento
+                const budgetBadge = o.budget ? 
+                    `<span class="ml-2 bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-sm font-bold shadow-sm" title="Orçamento Enviado"><i class="fas fa-dollar-sign"></i></span>` 
+                    : '';
+
                 const div = document.createElement('div');
                 div.className = 'bg-white p-5 rounded-xl shadow-sm border border-slate-200 relative group';
                 div.innerHTML = `
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2 gap-2">
                         <div>
                             <span class="font-bold text-lg text-slate-700">OS #${o.id}</span>
+                            ${budgetBadge}
                             <span class="text-xs text-gray-400 ml-2">${o.date}</span>
                         </div>
                         <div class="flex gap-2 flex-wrap items-center">
+                             <button onclick="openBudgetModal(${o.id})" class="text-yellow-600 hover:text-yellow-800 border border-yellow-200 bg-yellow-50 px-3 py-1 rounded text-xs flex items-center gap-1 font-bold" title="Orçamento">
+                                <i class="fas fa-file-invoice-dollar"></i> Orçamento
+                            </button>
                              <button onclick="sendWhatsApp(${o.id})" class="text-green-600 hover:text-green-800 border border-green-200 bg-green-50 px-2 py-1 rounded text-xs flex items-center gap-1" title="WhatsApp">
                                 <i class="fab fa-whatsapp"></i>
                             </button>
@@ -603,7 +680,6 @@
                                 <option value="pronto" ${o.status === 'pronto' ? 'selected' : ''}>Pronto</option>
                             </select>
                             
-                            <!-- Botões de Edição/Exclusão OS -->
                             <div class="ml-2 pl-2 border-l border-slate-200 flex gap-2">
                                 <button onclick="editOrder(${o.id})" class="text-indigo-400 hover:text-indigo-600" title="Editar OS">
                                     <i class="fas fa-pencil-alt"></i>
@@ -620,7 +696,7 @@
                     </div>
                     <div class="bg-gray-50 p-3 rounded text-sm text-gray-700 space-y-1">
                         <p><strong>Defeito:</strong> ${o.defect}</p>
-                        ${o.accessories ? `<p class="text-xs text-gray-500">Acessórios: ${o.accessories}</p>` : ''}
+                        ${o.budget ? `<p class="text-yellow-700 font-medium"><i class="fas fa-tag mr-1"></i>Orçamento: R$ ${o.budget.value}</p>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -635,6 +711,81 @@
                 renderDashboard();
                 renderOrders();
             }
+        }
+
+        // --- LÓGICA DE ORÇAMENTO ---
+        function openBudgetModal(orderId) {
+            currentBudgetOrderId = orderId;
+            const order = db.orders.find(o => o.id == orderId);
+            
+            // Preenche se já existir
+            if(order.budget) {
+                document.getElementById('budget-service').value = order.budget.service || '';
+                document.getElementById('budget-value').value = order.budget.value || '';
+                document.getElementById('budget-notes').value = order.budget.notes || '';
+            } else {
+                document.getElementById('budget-service').value = '';
+                document.getElementById('budget-value').value = '';
+                document.getElementById('budget-notes').value = '';
+            }
+            
+            toggleModal('modal-budget');
+        }
+
+        function saveBudget() {
+            if(!currentBudgetOrderId) return;
+            const service = document.getElementById('budget-service').value;
+            const value = document.getElementById('budget-value').value;
+            const notes = document.getElementById('budget-notes').value;
+
+            const index = db.orders.findIndex(o => o.id === currentBudgetOrderId);
+            if (index !== -1) {
+                db.orders[index].budget = { service, value, notes };
+                saveDB();
+                renderOrders(); // Atualiza a lista para mostrar indicador
+                toggleModal('modal-budget');
+                alert("Orçamento salvo!");
+            }
+        }
+
+        function saveAndSendBudget() {
+            if(!currentBudgetOrderId) return;
+            // Salva primeiro
+            const service = document.getElementById('budget-service').value;
+            const value = document.getElementById('budget-value').value;
+            const notes = document.getElementById('budget-notes').value;
+            
+            const index = db.orders.findIndex(o => o.id === currentBudgetOrderId);
+            if (index !== -1) {
+                db.orders[index].budget = { service, value, notes };
+                saveDB();
+                renderOrders();
+                toggleModal('modal-budget');
+                // Envia
+                sendBudgetWhatsApp(currentBudgetOrderId);
+            }
+        }
+
+        function sendBudgetWhatsApp(orderId) {
+            const order = db.orders.find(o => o.id == orderId);
+            const client = db.clients.find(c => c.id == order.clientId) || {};
+            const company = db.company;
+            const phone = client.phone.replace(/\D/g, '');
+            
+            if (phone.length < 10) return alert("Telefone inválido.");
+
+            const text = `*${company.name} - Orçamento*\n\n` +
+                `Olá *${client.name}*! Segue orçamento para seu aparelho:\n\n` +
+                `📋 *OS:* #${order.id}\n` +
+                `💻 *Equipamento:* ${order.device}\n` +
+                `⚠️ *Defeito:* ${order.defect}\n\n` +
+                `💰 *ORÇAMENTO PROPOSTO*\n` +
+                `🔧 *Serviço:* ${order.budget.service}\n` +
+                `💲 *Valor Total:* R$ ${order.budget.value}\n` +
+                `📝 *Obs:* ${order.budget.notes}\n\n` +
+                `Aguardamos sua aprovação!`;
+
+            window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(text)}`, '_blank');
         }
 
         // --- FUNÇÕES DE AÇÃO (IMPRIMIR / WHATSAPP) ---
@@ -665,6 +816,7 @@
                     <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px;">
                         <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">CLIENTE</h3>
                         <p><strong>Nome:</strong> ${client.name}</p>
+                        <p><strong>CPF/CNPJ:</strong> ${client.document || '-'}</p>
                         <p><strong>Telefone:</strong> ${client.phone}</p>
                         <p><strong>Email:</strong> ${client.email || '-'}</p>
                     </div>
