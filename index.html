@@ -192,7 +192,25 @@
 
             <!-- PAGINA: FINANCEIRO -->
             <div id="financial" class="page hidden fade-in">
-                <h3 class="text-lg font-semibold mb-6">Controle Financeiro</h3>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold">Controle Financeiro</h3>
+                    
+                    <!-- FILTROS FINANCEIROS -->
+                    <div class="flex gap-4 bg-white p-2 rounded-lg shadow-sm border border-gray-200 mt-4 md:mt-0">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" id="filter-notebook" checked onchange="renderFinancial()" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium"><i class="fas fa-laptop text-gray-500 mr-1"></i>Notebook</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" id="filter-celular" checked onchange="renderFinancial()" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium"><i class="fas fa-mobile-alt text-gray-500 mr-1"></i>Celular</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" id="filter-printer" checked onchange="renderFinancial()" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium"><i class="fas fa-print text-gray-500 mr-1"></i>Impressora</span>
+                        </label>
+                    </div>
+                </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <!-- Receita Estimada -->
@@ -200,7 +218,7 @@
                         <div>
                             <p class="text-gray-500 text-sm">Receita Estimada (Lucro)</p>
                             <p class="text-2xl font-bold text-yellow-600" id="fin-total-revenue">R$ 0,00</p>
-                            <p class="text-xs text-gray-400">Todos os orçamentos</p>
+                            <p class="text-xs text-gray-400">Filtrado por tipo</p>
                         </div>
                         <i class="fas fa-coins text-3xl text-yellow-200"></i>
                     </div>
@@ -210,7 +228,7 @@
                         <div>
                             <p class="text-gray-500 text-sm">Receita Efetivada (Lucro)</p>
                             <p class="text-2xl font-bold text-green-600" id="fin-effective-revenue">R$ 0,00</p>
-                            <p class="text-xs text-gray-400">Apenas status "Pronto"</p>
+                            <p class="text-xs text-gray-400">Prontos (Filtrado)</p>
                         </div>
                         <i class="fas fa-check-double text-3xl text-green-200"></i>
                     </div>
@@ -220,13 +238,14 @@
                         <div>
                             <p class="text-gray-500 text-sm">Total Orçamentos</p>
                             <p class="text-2xl font-bold text-blue-600" id="fin-total-count">0</p>
+                            <p class="text-xs text-gray-400">Filtrado</p>
                         </div>
                         <i class="fas fa-file-invoice-dollar text-3xl text-blue-200"></i>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div class="p-4 border-b bg-gray-50">
+                    <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
                         <h4 class="font-bold text-gray-700">Relatório Detalhado (Lucro = Valor - Custo)</h4>
                     </div>
                     <div class="overflow-x-auto">
@@ -234,10 +253,11 @@
                             <thead class="bg-gray-50 border-b text-sm text-gray-600">
                                 <tr>
                                     <th class="p-4">OS #</th>
+                                    <th class="p-4">Tipo</th>
                                     <th class="p-4">Serviço</th>
                                     <th class="p-4">Status</th>
-                                    <th class="p-4 text-right bg-red-50">Custo (Int.)</th>
-                                    <th class="p-4 text-right bg-blue-50">Valor Total</th>
+                                    <th class="p-4 text-right bg-red-50">Custo</th>
+                                    <th class="p-4 text-right bg-blue-50">Total</th>
                                     <th class="p-4 text-right bg-green-50">Lucro</th>
                                 </tr>
                             </thead>
@@ -246,7 +266,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <p id="no-financial-msg" class="p-8 text-center text-gray-400 hidden">Nenhum orçamento registrado.</p>
+                    <p id="no-financial-msg" class="p-8 text-center text-gray-400 hidden">Nenhum orçamento encontrado para os filtros selecionados.</p>
                 </div>
             </div>
 
@@ -359,8 +379,20 @@
                         <option value="">Selecione...</option>
                     </select>
                 </div>
+                
+                <!-- SELEÇÃO DE TIPO DE EQUIPAMENTO (NOVO) -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Tipo de Equipamento</label>
+                    <select id="order-type" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <option value="Notebook">Notebook</option>
+                        <option value="Celular">Celular</option>
+                        <option value="Impressora">Impressora</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="order-device" placeholder="Modelo do Notebook" required class="w-full p-2 border rounded">
+                    <input type="text" id="order-device" placeholder="Modelo do Equipamento" required class="w-full p-2 border rounded">
                     <input type="text" id="order-serial" placeholder="Nº Série (Opcional)" class="w-full p-2 border rounded">
                 </div>
                 <textarea id="order-defect" rows="2" placeholder="Descrição do Defeito..." required class="w-full p-2 border rounded"></textarea>
@@ -414,7 +446,7 @@
         </div>
     </div>
 
-    <!-- MODAL: RECIBO (NOVO) -->
+    <!-- MODAL: RECIBO -->
     <div id="modal-receipt" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
             <div class="bg-purple-50 p-4 border-b border-purple-100 flex justify-between items-center">
@@ -474,13 +506,13 @@
 
     <script>
         // --- GERENCIAMENTO DE DADOS (LOCALSTORAGE) ---
-        const DB_KEY = 'techfix_data_v5'; // Mantendo versão 5
+        const DB_KEY = 'techfix_data_v7'; // Versão 7 para incluir equipment type
         
         // Variáveis para controlar Edição
         let editingClientId = null;
         let editingOrderId = null;
         let currentBudgetOrderId = null;
-        let currentReceiptOrderId = null; // Variável nova para Recibo
+        let currentReceiptOrderId = null; 
 
         const initialData = {
             clients: [],
@@ -497,14 +529,13 @@
         let db = JSON.parse(localStorage.getItem(DB_KEY));
         
         if (!db) {
-            const oldDbV4 = JSON.parse(localStorage.getItem('techfix_data_v4'));
-            const oldDbV3 = JSON.parse(localStorage.getItem('techfix_data_v3'));
+            const oldDbV6 = JSON.parse(localStorage.getItem('techfix_data_v6'));
+            const oldDbV5 = JSON.parse(localStorage.getItem('techfix_data_v5'));
             
-            if(oldDbV4) {
-                db = { ...initialData, clients: oldDbV4.clients, orders: oldDbV4.orders, company: oldDbV4.company };
-            } else if(oldDbV3) {
-                db = { ...initialData, clients: oldDbV3.clients, orders: oldDbV3.orders, company: { ...initialData.company, ...oldDbV3.company } };
-                if(oldDbV3.company.logo) db.company.logo = oldDbV3.company.logo;
+            if(oldDbV6) {
+                db = { ...initialData, clients: oldDbV6.clients, orders: oldDbV6.orders, company: oldDbV6.company };
+            } else if(oldDbV5) {
+                db = { ...initialData, clients: oldDbV5.clients, orders: oldDbV5.orders, company: oldDbV5.company };
             } else {
                 db = initialData;
             }
@@ -609,14 +640,33 @@
             alert("Dados da empresa salvos com sucesso!");
         }
 
-        // --- LÓGICA FINANCEIRA (ATUALIZADA) ---
+        // --- LÓGICA FINANCEIRA (ATUALIZADA COM FILTROS) ---
         function renderFinancial() {
             const list = document.getElementById('financial-list');
             list.innerHTML = '';
             
+            // Obter estado dos checkboxes
+            const filterNotebook = document.getElementById('filter-notebook').checked;
+            const filterCelular = document.getElementById('filter-celular').checked;
+            const filterPrinter = document.getElementById('filter-printer').checked;
+
+            // Filtrar ordens que têm orçamento
             const ordersWithBudget = db.orders.filter(o => o.budget && o.budget.value);
             
-            if(ordersWithBudget.length === 0) {
+            // Aplicar filtro de tipo
+            const filteredOrders = ordersWithBudget.filter(o => {
+                const type = o.type || 'Notebook'; // Default para antigos
+                if (type === 'Notebook' && filterNotebook) return true;
+                if (type === 'Celular' && filterCelular) return true;
+                if (type === 'Impressora' && filterPrinter) return true;
+                // Se for outro tipo e nenhum filtro bater, mas se quisermos mostrar "Outros" talvez precise de checkbox. 
+                // Por enquanto mostra apenas se o tipo for compatível com a seleção.
+                // Se for "Outro", vou mostrar sempre que Notebook estiver marcado? Não, melhor só mostrar os específicos.
+                if (type === 'Outro' && (filterNotebook && filterCelular && filterPrinter)) return true; // Mostra outros se tudo marcado
+                return false;
+            });
+            
+            if(filteredOrders.length === 0) {
                 document.getElementById('no-financial-msg').classList.remove('hidden');
                 document.getElementById('fin-total-revenue').innerText = "R$ 0,00";
                 document.getElementById('fin-effective-revenue').innerText = "R$ 0,00";
@@ -629,9 +679,9 @@
             let totalEffectiveProfit = 0;
             
             // Ordenar por data (mais recente primeiro)
-            ordersWithBudget.sort((a,b) => b.id - a.id);
+            filteredOrders.sort((a,b) => b.id - a.id);
 
-            ordersWithBudget.forEach(o => {
+            filteredOrders.forEach(o => {
                 const client = db.clients.find(c => c.id == o.clientId) || { name: '?' };
                 
                 // Tratar valor (remover R$, trocar virgula por ponto se necessário para soma)
@@ -642,10 +692,10 @@
                 const costNum = parseFloat(costStr) || 0;
                 const profitNum = valNum - costNum;
 
-                // Receita Estimada (Soma de todos os lucros de orçamentos)
+                // Receita Estimada (Soma de todos os lucros de orçamentos filtrados)
                 totalEstimatedProfit += profitNum;
 
-                // Receita Efetivada (Soma dos lucros apenas de status "pronto")
+                // Receita Efetivada (Soma dos lucros apenas de status "pronto" filtrados)
                 if (o.status === 'pronto') {
                     totalEffectiveProfit += profitNum;
                 }
@@ -657,8 +707,15 @@
                 if(o.status === 'aprovado') statusColor = 'text-blue-600 font-bold';
                 if(o.status === 'pronto') statusColor = 'text-green-600 font-bold';
 
+                // Ícone baseado no tipo
+                let typeIcon = '<i class="fas fa-question text-gray-400"></i>';
+                if (o.type === 'Notebook') typeIcon = '<i class="fas fa-laptop text-blue-500"></i>';
+                if (o.type === 'Celular') typeIcon = '<i class="fas fa-mobile-alt text-purple-500"></i>';
+                if (o.type === 'Impressora') typeIcon = '<i class="fas fa-print text-gray-500"></i>';
+
                 tr.innerHTML = `
                     <td class="p-4 font-medium">#${o.id}</td>
+                    <td class="p-4 text-center" title="${o.type}">${typeIcon}</td>
                     <td class="p-4 text-gray-600">${o.budget.service}</td>
                     <td class="p-4 ${statusColor} text-sm uppercase">${o.status}</td>
                     <td class="p-4 text-right text-red-400 bg-red-50">- R$ ${costNum.toFixed(2).replace('.', ',')}</td>
@@ -671,7 +728,7 @@
             // Formatar totais
             document.getElementById('fin-total-revenue').innerText = totalEstimatedProfit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('fin-effective-revenue').innerText = totalEffectiveProfit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('fin-total-count').innerText = ordersWithBudget.length;
+            document.getElementById('fin-total-count').innerText = filteredOrders.length;
         }
 
         // --- LÓGICA DE CLIENTES ---
@@ -808,6 +865,7 @@
             document.getElementById('modal-order-title').innerText = "Editar OS #" + id;
 
             populateClientSelect(order.clientId);
+            document.getElementById('order-type').value = order.type || 'Notebook'; // Default
             document.getElementById('order-device').value = order.device;
             document.getElementById('order-serial').value = order.serial || '';
             document.getElementById('order-defect').value = order.defect;
@@ -836,6 +894,7 @@
         function saveOrder(e) {
             e.preventDefault();
             const clientId = document.getElementById('order-client').value;
+            const type = document.getElementById('order-type').value; // Novo campo
             const device = document.getElementById('order-device').value;
             const defect = document.getElementById('order-defect').value;
             const accessories = document.getElementById('order-accessories').value;
@@ -849,10 +908,13 @@
                 if (index !== -1) {
                     // Mantém o orçamento existente se houver
                     const existingBudget = db.orders[index].budget || null;
+                    const existingReceiptSent = db.orders[index].receiptSent || false;
+
                     db.orders[index] = { 
                         ...db.orders[index], 
-                        clientId, device, defect, accessories, password, serial,
-                        budget: existingBudget
+                        clientId, type, device, defect, accessories, password, serial,
+                        budget: existingBudget,
+                        receiptSent: existingReceiptSent
                     };
                     savedId = editingOrderId;
                 }
@@ -862,6 +924,7 @@
                 db.orders.push({
                     id: newId,
                     clientId,
+                    type, // Novo campo
                     device,
                     defect,
                     accessories,
@@ -869,7 +932,8 @@
                     serial,
                     status: 'analise',
                     date: new Date().toLocaleDateString('pt-PT'),
-                    budget: null
+                    budget: null,
+                    receiptSent: false
                 });
             }
 
@@ -918,10 +982,22 @@
                 if(o.status === 'aprovado') statusClass = 'bg-blue-100 text-blue-800';
                 if(o.status === 'pronto') statusClass = 'bg-green-100 text-green-800';
 
-                // Adicionar crachá de orçamento
+                // Crachá de orçamento
                 const budgetBadge = o.budget ? 
                     `<span class="ml-2 bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-sm font-bold shadow-sm" title="Orçamento Enviado"><i class="fas fa-dollar-sign"></i></span>` 
                     : '';
+                
+                // Crachá de recibo
+                const receiptBadge = o.receiptSent ? 
+                    `<span class="ml-1 bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-sm font-bold shadow-sm" title="Recibo Gerado"><i class="fas fa-dollar-sign"></i></span>` 
+                    : '';
+
+                // Ícone baseado no tipo
+                let typeIcon = '<i class="fas fa-question text-gray-400"></i>';
+                if (o.type === 'Notebook') typeIcon = '<i class="fas fa-laptop text-blue-500"></i>';
+                if (o.type === 'Celular') typeIcon = '<i class="fas fa-mobile-alt text-purple-500"></i>';
+                if (o.type === 'Impressora') typeIcon = '<i class="fas fa-print text-gray-500"></i>';
+
 
                 const div = document.createElement('div');
                 div.className = 'bg-white p-5 rounded-xl shadow-sm border border-slate-200 relative group';
@@ -929,7 +1005,7 @@
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2 gap-2">
                         <div>
                             <span class="font-bold text-lg text-slate-700">OS #${o.id}</span>
-                            ${budgetBadge}
+                            ${budgetBadge}${receiptBadge}
                             <span class="text-xs text-gray-400 ml-2">${o.date}</span>
                         </div>
                         <div class="flex gap-2 flex-wrap items-center">
@@ -962,7 +1038,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <h4 class="font-bold text-blue-600"><i class="fas fa-laptop mr-1"></i> ${o.device}</h4>
+                        <h4 class="font-bold text-blue-600 flex items-center gap-2">${typeIcon} ${o.device}</h4>
                         <p class="text-sm text-gray-600">Cliente: <b>${client.name}</b></p>
                     </div>
                     <div class="bg-gray-50 p-3 rounded text-sm text-gray-700 space-y-1">
@@ -988,7 +1064,7 @@
             }
         }
 
-        // --- LÓGICA DE ORÇAMENTO (ATUALIZADA) ---
+        // --- LÓGICA DE ORÇAMENTO ---
         function openBudgetModal(orderId) {
             currentBudgetOrderId = orderId;
             const order = db.orders.find(o => o.id == orderId);
@@ -1047,7 +1123,7 @@
             const order = db.orders.find(o => o.id == orderId);
             const client = db.clients.find(c => c.id == order.clientId) || {};
             const company = db.company;
-            const phone = client.phone.replace(/\D/g, '');
+            const phone = (client.phone || '').replace(/\D/g, '');
             
             if (phone.length < 10) return alert("Telefone inválido.");
 
@@ -1066,10 +1142,11 @@
             window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // --- LÓGICA DE RECIBO (NOVO) ---
+        // --- LÓGICA DE RECIBO ---
         function openReceiptModal(orderId) {
             currentReceiptOrderId = orderId;
             const order = db.orders.find(o => o.id == orderId);
+            if(!order) return;
             const client = db.clients.find(c => c.id == order.clientId) || {};
 
             // Preenche nome
@@ -1092,6 +1169,16 @@
         }
 
         function printReceipt() {
+            if(!currentReceiptOrderId) return;
+            
+            // Marcar como recibo gerado
+            const index = db.orders.findIndex(o => o.id === currentReceiptOrderId);
+            if(index !== -1) {
+                db.orders[index].receiptSent = true;
+                saveDB();
+                renderOrders();
+            }
+
             const order = db.orders.find(o => o.id === currentReceiptOrderId);
             const client = db.clients.find(c => c.id === order.clientId) || {};
             const company = db.company;
@@ -1161,15 +1248,27 @@
         }
 
         function sendReceiptWhatsApp() {
+            if(!currentReceiptOrderId) return;
+
             const order = db.orders.find(o => o.id === currentReceiptOrderId);
+            if (!order) return alert("Erro ao encontrar ordem.");
+
+            // Marcar como recibo gerado/enviado
+            const index = db.orders.findIndex(o => o.id === currentReceiptOrderId);
+            if(index !== -1) {
+                db.orders[index].receiptSent = true;
+                saveDB();
+                renderOrders();
+            }
+
             const client = db.clients.find(c => c.id === order.clientId) || {};
             const company = db.company;
-            const phone = client.phone.replace(/\D/g, '');
+            const phone = (client.phone || '').replace(/\D/g, '');
             
             const value = document.getElementById('receipt-value').value;
             const desc = document.getElementById('receipt-desc').value;
 
-            if (phone.length < 10) return alert("Telefone inválido.");
+            if (phone.length < 10) return alert("Telefone inválido ou não cadastrado para este cliente.");
 
             const text = `*${company.name} - Comprovante de Pagamento*\n\n` +
                 `Olá *${client.name}*! Confirmamos o recebimento do pagamento.\n\n` +
@@ -1295,7 +1394,7 @@
             const order = db.orders.find(o => o.id == orderId);
             const client = db.clients.find(c => c.id == order.clientId) || {};
             const company = db.company;
-            const phone = client.phone.replace(/\D/g, '');
+            const phone = (client.phone || '').replace(/\D/g, '');
             
             if (phone.length < 10) {
                 alert("O telefone do cliente parece inválido para WhatsApp.");
