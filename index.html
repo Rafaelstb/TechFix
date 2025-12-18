@@ -30,23 +30,37 @@
 
     <!-- Sidebar -->
     <aside class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex no-print">
-        <div class="p-6 flex items-center gap-3 border-b border-slate-700">
-            <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-wrench"></i></div>
-            <h1 class="text-xl font-bold">TechFix</h1>
+        <div class="p-6 flex flex-col items-center border-b border-slate-700">
+            <div class="flex items-center gap-3 w-full justify-center mb-4">
+                <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-wrench"></i></div>
+                <h1 class="text-xl font-bold">TechFix</h1>
+            </div>
+            
+            <!-- LOGO DA EMPRESA -->
+            <div id="sidebar-logo-container" class="w-full flex justify-center">
+                <!-- A logo será injetada aqui via JS se existir -->
+                <div class="text-xs text-slate-500 border border-slate-700 border-dashed p-2 rounded w-full text-center">
+                    Sem Logo<br>(Configure em Configurações)
+                </div>
+            </div>
         </div>
+
         <nav class="flex-1 p-4 space-y-2">
             <button onclick="showPage('dashboard')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition">
-                <i class="fas fa-chart-line w-6"></i> Visão Geral
+                <i class="fas fa-chart-line w-6 text-center"></i> Visão Geral
             </button>
             <button onclick="showPage('clients')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition">
-                <i class="fas fa-users w-6"></i> Clientes
+                <i class="fas fa-users w-6 text-center"></i> Clientes
             </button>
             <button onclick="showPage('orders')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition">
-                <i class="fas fa-laptop-medical w-6"></i> Ordens (OS)
+                <i class="fas fa-laptop-medical w-6 text-center"></i> Ordens (OS)
+            </button>
+            <button onclick="showPage('financial')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition text-green-400 hover:text-green-300">
+                <i class="fas fa-dollar-sign w-6 text-center"></i> Financeiro
             </button>
             <hr class="border-slate-700 my-2">
             <button onclick="showPage('settings')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-3 transition text-slate-400 hover:text-white">
-                <i class="fas fa-cog w-6"></i> Configurações
+                <i class="fas fa-cog w-6 text-center"></i> Configurações
             </button>
         </nav>
     </aside>
@@ -63,6 +77,7 @@
         <button onclick="showPage('dashboard'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700">Visão Geral</button>
         <button onclick="showPage('clients'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700">Clientes</button>
         <button onclick="showPage('orders'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700">Ordens (OS)</button>
+        <button onclick="showPage('financial'); toggleMobileMenu()" class="block w-full text-left p-3 border-b border-slate-700 text-green-400">Financeiro</button>
         <button onclick="showPage('settings'); toggleMobileMenu()" class="block w-full text-left p-3 text-gray-400">Configurações</button>
     </div>
 
@@ -159,9 +174,75 @@
                 <p id="no-orders-msg" class="p-8 text-center text-gray-400 hidden">Nenhuma ordem encontrada.</p>
             </div>
 
+            <!-- PAGINA: FINANCEIRO -->
+            <div id="financial" class="page hidden fade-in">
+                <h3 class="text-lg font-semibold mb-6">Controle Financeiro</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-500">Receita Estimada (Orçamentos)</p>
+                            <p class="text-3xl font-bold text-green-600" id="fin-total-revenue">R$ 0,00</p>
+                        </div>
+                        <i class="fas fa-coins text-3xl text-green-200"></i>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-500">OS com Orçamento</p>
+                            <p class="text-3xl font-bold text-blue-600" id="fin-total-count">0</p>
+                        </div>
+                        <i class="fas fa-file-invoice-dollar text-3xl text-blue-200"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b bg-gray-50">
+                        <h4 class="font-bold text-gray-700">Relatório de Orçamentos</h4>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="p-4">OS #</th>
+                                <th class="p-4">Cliente</th>
+                                <th class="p-4">Serviço</th>
+                                <th class="p-4">Status OS</th>
+                                <th class="p-4 text-right">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financial-list" class="divide-y">
+                            <!-- Inserido via JS -->
+                        </tbody>
+                    </table>
+                    <p id="no-financial-msg" class="p-8 text-center text-gray-400 hidden">Nenhum orçamento registrado.</p>
+                </div>
+            </div>
+
             <!-- PAGINA: CONFIGURAÇÕES E DADOS -->
             <div id="settings" class="page hidden fade-in space-y-8">
                 
+                <!-- Logo Upload -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2 text-slate-800">
+                        <i class="fas fa-image text-blue-600"></i> Logo da Empresa
+                    </h3>
+                    <div class="flex items-center gap-4">
+                        <div id="settings-logo-preview" class="w-24 h-24 bg-gray-100 border border-dashed border-gray-300 rounded flex items-center justify-center text-gray-400">
+                            Sem Logo
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-600 mb-2">Selecione a imagem da sua logo para aparecer no menu e nas impressões.</p>
+                            <input type="file" id="logo-input" accept="image/*" onchange="handleLogoUpload(this)" class="block w-full text-sm text-slate-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100
+                            "/>
+                            <button onclick="removeLogo()" class="mt-2 text-xs text-red-500 hover:text-red-700 font-semibold">Remover Logo</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Dados da Empresa -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                     <h3 class="text-lg font-semibold mb-4 flex items-center gap-2 text-slate-800">
@@ -317,7 +398,7 @@
 
     <script>
         // --- GERENCIAMENTO DE DADOS (LOCALSTORAGE) ---
-        const DB_KEY = 'techfix_data_v3';
+        const DB_KEY = 'techfix_data_v4'; // Atualizei versão para incluir logo e financeiro
         
         // Variáveis para controlar Edição
         let editingClientId = null;
@@ -331,20 +412,23 @@
                 name: 'Infosupri - RD suprimentos de informatica LTDA',
                 phone: '3021-5940',
                 address: 'Rua República da Armênia, 1312 - CNPJ: 07.079.968/0001-02',
-                footer: 'Obrigado pela preferência!'
+                footer: 'Obrigado pela preferência!',
+                logo: null // Base64 da logo
             }
         };
 
         let db = JSON.parse(localStorage.getItem(DB_KEY));
         
         if (!db) {
+            const oldDbV3 = JSON.parse(localStorage.getItem('techfix_data_v3'));
             const oldDbV2 = JSON.parse(localStorage.getItem('techfix_data_v2'));
-            const oldDbV1 = JSON.parse(localStorage.getItem('techfix_data_v1'));
             
-            if(oldDbV2) {
+            if(oldDbV3) {
+                db = { ...initialData, clients: oldDbV3.clients, orders: oldDbV3.orders, company: { ...initialData.company, ...oldDbV3.company } };
+                // Garantir que a logo antiga não seja perdida se já existisse (improvável mas seguro)
+                if(oldDbV3.company.logo) db.company.logo = oldDbV3.company.logo;
+            } else if(oldDbV2) {
                 db = { ...initialData, clients: oldDbV2.clients, orders: oldDbV2.orders };
-            } else if(oldDbV1) {
-                db = { ...initialData, clients: oldDbV1.clients, orders: oldDbV1.orders };
             } else {
                 db = initialData;
             }
@@ -357,6 +441,7 @@
         function saveDB() {
             localStorage.setItem(DB_KEY, JSON.stringify(db));
             renderDashboard();
+            renderLogo(); // Atualiza logo na sidebar
         }
 
         // --- NAVEGAÇÃO ---
@@ -368,12 +453,14 @@
                 'dashboard': 'Visão Geral', 
                 'clients': 'Clientes', 
                 'orders': 'Ordens de Serviço',
+                'financial': 'Controle Financeiro',
                 'settings': 'Configurações'
             };
             document.getElementById('page-title').innerText = titles[pageId];
             
             if(pageId === 'clients') renderClients();
             if(pageId === 'orders') renderOrders();
+            if(pageId === 'financial') renderFinancial();
             if(pageId === 'settings') loadCompanySettings();
         }
 
@@ -386,17 +473,57 @@
             el.classList.toggle('hidden');
         }
 
-        // --- CONFIGURAÇÕES DA EMPRESA ---
+        // --- LOGO E CONFIGURAÇÕES DA EMPRESA ---
+        function handleLogoUpload(input) {
+            const file = input.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    db.company.logo = e.target.result; // Salva base64
+                    saveDB();
+                    loadCompanySettings(); // Atualiza preview
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeLogo() {
+            if(confirm('Remover a logo?')) {
+                db.company.logo = null;
+                saveDB();
+                loadCompanySettings();
+            }
+        }
+
+        function renderLogo() {
+            const container = document.getElementById('sidebar-logo-container');
+            if(db.company.logo) {
+                container.innerHTML = `<img src="${db.company.logo}" alt="Logo" class="max-w-[120px] max-h-[80px] rounded shadow-sm bg-white p-1">`;
+            } else {
+                container.innerHTML = `<div class="text-xs text-slate-500 border border-slate-700 border-dashed p-2 rounded w-full text-center">Sem Logo<br>(Configure em Configurações)</div>`;
+            }
+        }
+
         function loadCompanySettings() {
             document.getElementById('conf-company-name').value = db.company.name || '';
             document.getElementById('conf-company-phone').value = db.company.phone || '';
             document.getElementById('conf-company-address').value = db.company.address || '';
             document.getElementById('conf-company-footer').value = db.company.footer || '';
+            
+            // Preview Logo
+            const preview = document.getElementById('settings-logo-preview');
+            if(db.company.logo) {
+                preview.innerHTML = `<img src="${db.company.logo}" class="max-w-full max-h-full object-contain">`;
+            } else {
+                preview.innerHTML = 'Sem Logo';
+            }
         }
 
         function saveCompanySettings(e) {
             e.preventDefault();
+            // Mantém a logo atual, só atualiza textos
             db.company = {
+                ...db.company,
                 name: document.getElementById('conf-company-name').value,
                 phone: document.getElementById('conf-company-phone').value,
                 address: document.getElementById('conf-company-address').value,
@@ -404,6 +531,56 @@
             };
             saveDB();
             alert("Dados da empresa salvos com sucesso!");
+        }
+
+        // --- LÓGICA FINANCEIRA ---
+        function renderFinancial() {
+            const list = document.getElementById('financial-list');
+            list.innerHTML = '';
+            
+            const ordersWithBudget = db.orders.filter(o => o.budget && o.budget.value);
+            
+            if(ordersWithBudget.length === 0) {
+                document.getElementById('no-financial-msg').classList.remove('hidden');
+                document.getElementById('fin-total-revenue').innerText = "R$ 0,00";
+                document.getElementById('fin-total-count').innerText = "0";
+                return;
+            }
+            document.getElementById('no-financial-msg').classList.add('hidden');
+
+            let totalRevenue = 0;
+            
+            // Ordenar por data (mais recente primeiro)
+            ordersWithBudget.sort((a,b) => b.id - a.id);
+
+            ordersWithBudget.forEach(o => {
+                const client = db.clients.find(c => c.id == o.clientId) || { name: '?' };
+                
+                // Tratar valor (remover R$, trocar virgula por ponto se necessário para soma)
+                let valStr = o.budget.value.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+                let valNum = parseFloat(valStr) || 0;
+                totalRevenue += valNum;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b last:border-0';
+                
+                let statusColor = 'text-gray-500';
+                if(o.status === 'aprovado') statusColor = 'text-blue-600 font-bold';
+                if(o.status === 'pronto') statusColor = 'text-green-600 font-bold';
+
+                tr.innerHTML = `
+                    <td class="p-4 font-medium">#${o.id}</td>
+                    <td class="p-4 text-gray-600">${client.name}</td>
+                    <td class="p-4 text-gray-600">${o.budget.service}</td>
+                    <td class="p-4 ${statusColor} text-sm uppercase">${o.status}</td>
+                    <td class="p-4 text-right font-bold text-gray-700">R$ ${o.budget.value}</td>
+                `;
+                list.appendChild(tr);
+            });
+
+            // Formatar total
+            document.getElementById('fin-total-revenue').innerText = totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('fin-total-count').innerText = ordersWithBudget.length;
         }
 
         // --- LÓGICA DE CLIENTES ---
@@ -710,6 +887,10 @@
                 saveDB();
                 renderDashboard();
                 renderOrders();
+                // Se estamos na pagina financeira, atualiza ela tb
+                if(!document.getElementById('financial').classList.contains('hidden')) {
+                    renderFinancial();
+                }
             }
         }
 
@@ -742,7 +923,7 @@
             if (index !== -1) {
                 db.orders[index].budget = { service, value, notes };
                 saveDB();
-                renderOrders(); // Atualiza a lista para mostrar indicador
+                renderOrders(); 
                 toggleModal('modal-budget');
                 alert("Orçamento salvo!");
             }
@@ -750,7 +931,6 @@
 
         function saveAndSendBudget() {
             if(!currentBudgetOrderId) return;
-            // Salva primeiro
             const service = document.getElementById('budget-service').value;
             const value = document.getElementById('budget-value').value;
             const notes = document.getElementById('budget-notes').value;
@@ -761,7 +941,6 @@
                 saveDB();
                 renderOrders();
                 toggleModal('modal-budget');
-                // Envia
                 sendBudgetWhatsApp(currentBudgetOrderId);
             }
         }
@@ -794,9 +973,16 @@
             const client = db.clients.find(c => c.id == order.clientId) || {};
             const company = db.company;
 
+            // Se tem logo, adiciona no topo
+            let logoHtml = '';
+            if(company.logo) {
+                logoHtml = `<div style="text-align: center; margin-bottom: 10px;"><img src="${company.logo}" style="max-height: 80px; max-width: 200px;"></div>`;
+            }
+
             const printContent = `
                 <div style="border: 1px solid #000; padding: 40px; font-family: 'Arial', sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
                     
+                    ${logoHtml}
                     <!-- CABEÇALHO EMPRESA -->
                     <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 20px;">
                         <h1 style="margin: 0; font-size: 24px; font-weight: bold; text-transform: uppercase;">${company.name}</h1>
@@ -950,7 +1136,9 @@
             document.getElementById('dash-client-count').innerText = db.clients.length;
         }
 
+        // Inicializar
         renderDashboard();
+        renderLogo(); // Adicionado aqui
     </script>
 </body>
 </html>
