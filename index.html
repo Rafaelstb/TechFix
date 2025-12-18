@@ -12,18 +12,34 @@
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Estilos de Impressão */
+        /* Estilos de Impressão CORRIGIDOS */
         @media print {
-            body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-            .no-print { display: none !important; }
+            body * { 
+                visibility: hidden; 
+            }
+            #printable-area, #printable-area * { 
+                visibility: visible; 
+            }
+            #printable-area { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                margin: 0; 
+                padding: 0; 
+                display: block !important; /* FORÇA A EXIBIÇÃO AO IMPRIMIR */
+                background-color: white;
+                z-index: 9999;
+            }
+            .no-print { 
+                display: none !important; 
+            }
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 h-screen flex overflow-hidden">
 
-    <!-- Área de Impressão (Invisível normalmente) -->
+    <!-- Área de Impressão (Invisível na tela, Visível na impressão) -->
     <div id="printable-area" class="hidden bg-white text-black p-8">
         <!-- O conteúdo a ser impresso será injetado aqui via JS -->
     </div>
@@ -37,7 +53,7 @@
             </div>
             
             <!-- LOGO DA EMPRESA -->
-            <div id="sidebar-logo-container" class="w-full flex justify-center">
+            <div id="sidebar-logo-container" class="w-full flex justify-center min-h-[50px] items-center">
                 <!-- A logo será injetada aqui via JS se existir -->
                 <div class="text-xs text-slate-500 border border-slate-700 border-dashed p-2 rounded w-full text-center">
                     Sem Logo<br>(Configure em Configurações)
@@ -498,7 +514,7 @@
         function renderLogo() {
             const container = document.getElementById('sidebar-logo-container');
             if(db.company.logo) {
-                container.innerHTML = `<img src="${db.company.logo}" alt="Logo" class="max-w-[120px] max-h-[80px] rounded shadow-sm bg-white p-1">`;
+                container.innerHTML = `<img src="${db.company.logo}" alt="Logo" class="max-w-[140px] max-h-[100px] object-contain">`;
             } else {
                 container.innerHTML = `<div class="text-xs text-slate-500 border border-slate-700 border-dashed p-2 rounded w-full text-center">Sem Logo<br>(Configure em Configurações)</div>`;
             }
