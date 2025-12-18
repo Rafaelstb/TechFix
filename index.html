@@ -795,58 +795,93 @@
             const company = db.company;
 
             const printContent = `
-                <div style="border: 1px solid #000; padding: 40px; font-family: 'Courier New', Courier, monospace; max-width: 800px; margin: 0 auto;">
-                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px;">
-                        <h1 style="margin: 0; font-size: 28px; font-weight: bold;">${company.name.toUpperCase()}</h1>
-                        <p style="margin: 5px 0;">${company.phone}</p>
-                        <p style="margin: 5px 0; font-size: 12px;">${company.address}</p>
+                <div style="border: 1px solid #000; padding: 40px; font-family: 'Arial', sans-serif; max-width: 800px; margin: 0 auto; color: #000;">
+                    
+                    <!-- CABEÇALHO EMPRESA -->
+                    <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 20px;">
+                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; text-transform: uppercase;">${company.name}</h1>
+                        <p style="margin: 5px 0; font-size: 14px;">${company.address}</p>
+                        <p style="margin: 5px 0; font-size: 14px; font-weight: bold;">Tel: ${company.phone}</p>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                    <!-- NUMERO OS E DATA -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; border: 1px solid #000; padding: 10px; background-color: #f0f0f0;">
                         <div>
-                            <h2 style="font-size: 20px; margin: 0;">ORDEM DE SERVIÇO</h2>
-                            <p style="font-size: 18px; font-weight: bold;">#${order.id}</p>
+                            <span style="font-size: 18px; font-weight: bold;">ORDEM DE SERVIÇO Nº: ${order.id}</span>
                         </div>
                         <div style="text-align: right;">
-                            <p><strong>Data:</strong> ${order.date}</p>
-                            <p><strong>Status:</strong> ${order.status.toUpperCase()}</p>
+                            <span style="font-size: 14px;">DATA DE ENTRADA: <strong>${order.date}</strong></span>
+                            <br>
+                            <span style="font-size: 14px;">STATUS ATUAL: <strong>${order.status.toUpperCase()}</strong></span>
                         </div>
                     </div>
 
-                    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px;">
-                        <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">CLIENTE</h3>
-                        <p><strong>Nome:</strong> ${client.name}</p>
-                        <p><strong>CPF/CNPJ:</strong> ${client.document || '-'}</p>
-                        <p><strong>Telefone:</strong> ${client.phone}</p>
-                        <p><strong>Email:</strong> ${client.email || '-'}</p>
+                    <!-- DADOS DO CLIENTE -->
+                    <div style="margin-bottom: 15px;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 14px; border-bottom: 1px solid #ccc; text-transform: uppercase;">Dados do Cliente</h3>
+                        <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 4px; width: 60%;"><strong>Nome:</strong> ${client.name}</td>
+                                <td style="padding: 4px;"><strong>CPF/CNPJ:</strong> ${client.document || 'Não informado'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px;"><strong>Telefone:</strong> ${client.phone}</td>
+                                <td style="padding: 4px;"><strong>Email:</strong> ${client.email || '-'}</td>
+                            </tr>
+                        </table>
                     </div>
 
-                    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px;">
-                        <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">EQUIPAMENTO</h3>
-                        <p><strong>Modelo:</strong> ${order.device}</p>
-                        <p><strong>Serial:</strong> ${order.serial || '-'}</p>
-                        <p><strong>Acessórios:</strong> ${order.accessories || 'Nenhum'}</p>
-                        ${order.password ? `<p><strong>Senha:</strong> ${order.password}</p>` : ''}
+                    <!-- DADOS DO EQUIPAMENTO -->
+                    <div style="margin-bottom: 15px;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 14px; border-bottom: 1px solid #ccc; text-transform: uppercase;">Equipamento</h3>
+                        <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 4px; width: 60%;"><strong>Modelo/Equipamento:</strong> ${order.device}</td>
+                                <td style="padding: 4px;"><strong>Nº de Série:</strong> ${order.serial || '-'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px;" colspan="2"><strong>Acessórios Deixados:</strong> ${order.accessories || 'Nenhum'}</td>
+                            </tr>
+                            ${order.password ? `<tr><td style="padding: 4px;" colspan="2"><strong>Senha do Sistema:</strong> ${order.password}</td></tr>` : ''}
+                        </table>
                     </div>
 
-                    <div style="margin-bottom: 40px; border: 1px solid #ccc; padding: 15px; background: #f9f9f9;">
-                        <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px;">DEFEITO RELATADO</h3>
-                        <p style="font-size: 16px;">${order.defect}</p>
+                    <!-- DEFEITO RELATADO -->
+                    <div style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase;">Defeito Relatado / Observações</h3>
+                        <p style="font-size: 13px; margin: 0;">${order.defect}</p>
                     </div>
 
-                    <div style="margin-top: 60px; display: flex; justify-content: space-between;">
+                    <!-- ORÇAMENTO (SE HOUVER) -->
+                    ${order.budget ? `
+                    <div style="margin-bottom: 20px; border: 1px dashed #000; padding: 10px; background-color: #fffff0;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase;">Orçamento / Serviço</h3>
+                        <p style="font-size: 12px; margin: 2px 0;"><strong>Serviço:</strong> ${order.budget.service}</p>
+                        <p style="font-size: 12px; margin: 2px 0;"><strong>Valor:</strong> R$ ${order.budget.value}</p>
+                        <p style="font-size: 12px; margin: 2px 0;"><strong>Obs:</strong> ${order.budget.notes}</p>
+                    </div>` : ''}
+
+                    <!-- TERMOS E CONDIÇÕES (TEXTO SOLICITADO) -->
+                    <div style="margin-bottom: 30px; font-size: 10px; text-align: justify; line-height: 1.4; border-top: 2px solid #000; padding-top: 10px;">
+                        <strong>CONDIÇÕES DE SERVIÇOS:</strong><br>
+                        A Empresa dá garantia de 90 dias para mão de obra e peças usadas no conserto, contados a partir da data de autorização do serviço. INICIA QUANDO O SERVIÇO ESTIVER PRONTO.<br><br>
+                        Os aparelhos não retirados no prazo de 60 dias da data de entrada, será cobrada uma taxa de armazenamento diária (R$ 5,00, cinco Reais).<br>
+                        Após, será enviado para um depósito. Durante o período de armazenamento o equipamento pode sofrer danos naturais.<br><br>
+                        Ao ligar para a Empresa Prestadora de Serviço, informe o número da Ordem de Serviço para melhor atendê-lo. Qualquer dúvida que venha a ter com relação ao serviço entre em contato!<br><br>
+                        <strong>OS APARELHOS DEIXADOS NA INFOSUPRI POR MAIS DE 90 DIAS SERÃO DESPACHADOS PARA TIRAR OS CUSTOS.</strong>
+                    </div>
+
+                    <!-- ASSINATURAS -->
+                    <div style="display: flex; justify-content: space-between; margin-top: 40px;">
                         <div style="text-align: center; width: 45%;">
                             <div style="border-top: 1px solid #000; margin-bottom: 5px;"></div>
-                            Assinatura da Empresa
+                            Assinatura da Infosupri
                         </div>
                         <div style="text-align: center; width: 45%;">
                             <div style="border-top: 1px solid #000; margin-bottom: 5px;"></div>
                             Assinatura do Cliente
+                            <div style="font-size: 10px; margin-top: 2px;">Declaro estar ciente das condições acima.</div>
                         </div>
-                    </div>
-                    
-                    <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #666;">
-                        <p>${company.footer}</p>
                     </div>
                 </div>
             `;
