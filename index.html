@@ -38,8 +38,8 @@
                 <h1 class="text-xl font-bold">TechFix</h1>
             </div>
             <div id="sidebar-logo-container" class="w-full flex justify-center min-h-[50px] items-center">
-                <div class="text-xs text-slate-500 border border-slate-700 border-dashed p-2 rounded w-full text-center">
-                    Cloud Sincronizado
+                <div class="text-[10px] text-slate-500 border border-slate-700 border-dashed p-2 rounded w-full text-center uppercase tracking-widest">
+                    Cloud Ativo
                 </div>
             </div>
         </div>
@@ -65,11 +65,11 @@
     </aside>
 
     <main class="flex-1 flex flex-col h-full overflow-auto no-print">
-        <header class="bg-white p-6 shadow-sm flex justify-between items-center">
+        <header class="bg-white p-6 shadow-sm flex justify-between items-center border-b">
             <h2 id="page-title" class="text-2xl font-bold text-gray-700">Visão Geral</h2>
             <div class="flex items-center gap-4">
-                <div id="connection-status" class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full animate-pulse uppercase font-bold">Conectando...</div>
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold uppercase">TF</div>
+                <div id="connection-status" class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full animate-pulse uppercase font-bold border border-yellow-200">Conectando...</div>
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold uppercase border-2 border-blue-200">TF</div>
             </div>
         </header>
 
@@ -100,6 +100,10 @@
                         <i class="fas fa-users text-3xl text-purple-200"></i>
                     </div>
                 </div>
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-bold text-blue-800 mb-1">Painel Sincronizado</h3>
+                    <p class="text-sm text-blue-600">As suas Ordens de Serviço e Clientes agora são guardados na nuvem e atualizados em tempo real.</p>
+                </div>
             </div>
 
             <!-- CLIENTES -->
@@ -109,11 +113,11 @@
                         <input type="text" id="search-client" oninput="window.renderClients()" placeholder="Procurar cliente..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                         <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
                     </div>
-                    <button onclick="window.openModal('modal-client')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition font-bold">
+                    <button onclick="window.openModal('modal-client')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition font-bold shadow-lg">
                         <i class="fas fa-plus mr-2"></i> NOVO CLIENTE
                     </button>
                 </div>
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border">
                     <table class="w-full text-left">
                         <thead class="bg-gray-50 border-b">
                             <tr><th class="p-4">Nome</th><th class="p-4">Telefone</th><th class="p-4 text-right">Ações</th></tr>
@@ -130,7 +134,7 @@
                         <input type="text" id="search-order" oninput="window.renderOrders()" placeholder="Procurar OS..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                         <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
                     </div>
-                    <button onclick="window.openOrderModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition font-bold">
+                    <button onclick="window.openOrderModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition font-bold shadow-lg">
                         <i class="fas fa-plus mr-2"></i> NOVA ORDEM
                     </button>
                 </div>
@@ -139,9 +143,12 @@
 
             <!-- FINANCEIRO -->
             <div id="financial" class="page hidden fade-in">
-                <div class="bg-white p-6 rounded-xl shadow-sm border mb-6">
-                    <h3 class="text-gray-500 font-bold uppercase text-xs mb-1">Lucro Efetivado (Entregues)</h3>
-                    <h2 class="text-4xl font-black text-green-600" id="fin-total">R$ 0,00</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border mb-6 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-gray-500 font-bold uppercase text-xs mb-1">Lucro Efetivado (Entregues)</h3>
+                        <h2 class="text-4xl font-black text-green-600" id="fin-total">R$ 0,00</h2>
+                    </div>
+                    <i class="fas fa-chart-pie text-5xl text-green-100"></i>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
                     <table class="w-full text-left">
@@ -156,11 +163,9 @@
             <!-- CONFIGURAÇÕES -->
             <div id="settings" class="page hidden fade-in space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <h3 class="font-bold mb-4">Dados da Empresa</h3>
-                    <div class="space-y-4">
-                        <p class="text-sm text-gray-500 italic">As configurações da empresa agora são sincronizadas automaticamente na nuvem.</p>
-                        <button onclick="alert('Funcionalidade em desenvolvimento para persistência de dados de empresa.')" class="bg-slate-200 text-slate-700 px-6 py-2 rounded font-bold">Editar Perfil</button>
-                    </div>
+                    <h3 class="font-bold mb-4">Configuração Cloud</h3>
+                    <p class="text-sm text-gray-500 mb-4">Os seus dados estão vinculados ao projeto: <code class="bg-gray-100 p-1 rounded" id="debug-project-id">---</code></p>
+                    <button onclick="location.reload()" class="bg-slate-800 text-white px-6 py-2 rounded font-bold hover:bg-slate-700 transition">Reiniciar Ligação</button>
                 </div>
             </div>
         </div>
@@ -169,12 +174,18 @@
     <!-- MODAIS -->
     <div id="modal-client" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-            <h3 class="font-bold text-lg mb-4">Novo Cliente</h3>
+            <h3 class="font-bold text-lg mb-4">Registar Novo Cliente</h3>
             <form onsubmit="window.saveClient(event)" class="space-y-4">
-                <input type="text" id="c-name" placeholder="Nome Completo" required class="w-full p-2 border rounded">
-                <input type="text" id="c-phone" placeholder="WhatsApp" required class="w-full p-2 border rounded">
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-bold">Salvar Cliente</button>
-                <button type="button" onclick="window.closeModal('modal-client')" class="w-full text-gray-400 mt-2">Cancelar</button>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Nome do Cliente</label>
+                    <input type="text" id="c-name" placeholder="Ex: João Silva" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">WhatsApp / Telefone</label>
+                    <input type="text" id="c-phone" placeholder="9xxxxxxxx" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-blue-700 transition uppercase tracking-wide">Salvar Cliente</button>
+                <button type="button" onclick="window.closeModal('modal-client')" class="w-full text-gray-400 mt-2 text-sm">Cancelar</button>
             </form>
         </div>
     </div>
@@ -183,15 +194,30 @@
         <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
             <h3 class="font-bold text-lg mb-4">Lançar Ordem de Serviço</h3>
             <form onsubmit="window.saveOrder(event)" class="space-y-4">
-                <select id="os-client-select" required class="w-full p-2 border rounded bg-white"></select>
-                <input type="text" id="os-device" placeholder="Aparelho" required class="w-full p-2 border rounded">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="number" step="0.01" id="os-cost" placeholder="Custo Peça (R$)" class="w-full p-2 border rounded">
-                    <input type="number" step="0.01" id="os-price" placeholder="Preço Total (R$)" required class="w-full p-2 border rounded">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Selecionar Cliente</label>
+                    <select id="os-client-select" required class="w-full p-2 border rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none"></select>
                 </div>
-                <textarea id="os-problem" placeholder="Defeito relatado..." class="w-full p-2 border rounded h-24" required></textarea>
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-bold uppercase">Criar OS</button>
-                <button type="button" onclick="window.closeModal('modal-order')" class="w-full text-gray-400 mt-2">Voltar</button>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Aparelho</label>
+                    <input type="text" id="os-device" placeholder="Ex: iPhone 11 Pro" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Custo da Peça</label>
+                        <input type="number" step="0.01" id="os-cost" placeholder="0.00" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Preço Total</label>
+                        <input type="number" step="0.01" id="os-price" placeholder="0.00" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Descrição do Problema</label>
+                    <textarea id="os-problem" placeholder="Relate o defeito aqui..." class="w-full p-2 border rounded h-24 focus:ring-2 focus:ring-blue-500 outline-none" required></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-blue-700 transition uppercase tracking-wide">Criar OS na Nuvem</button>
+                <button type="button" onclick="window.closeModal('modal-order')" class="w-full text-gray-400 mt-2 text-sm">Voltar</button>
             </form>
         </div>
     </div>
@@ -199,59 +225,83 @@
     <!-- FIREBASE CLOUD SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIGURAÇÕES FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyAcqSQNGd8scZGMgc-RL8fWictct8nIB0k",
-            authDomain: "techfix-8cb67.firebaseapp.com",
-            projectId: "techfix-8cb67",
-            storageBucket: "techfix-8cb67.firebasestorage.app",
-            messagingSenderId: "309298677524",
-            appId: "1:309298677524:web:eec6a50678bfaefbe9e401"
-        };
+        // CONFIGURAÇÕES FIREBASE DINÂMICAS DO AMBIENTE
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "", 
+                authDomain: "techfix-8cb67.firebaseapp.com",
+                projectId: "techfix-8cb67",
+                storageBucket: "techfix-8cb67.firebasestorage.app",
+                messagingSenderId: "309298677524",
+                appId: "1:309298677524:web:eec6a50678bfaefbe9e401"
+            };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'techfix-8cb67';
+        document.getElementById('debug-project-id').innerText = appId;
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const dbFirestore = getFirestore(app);
-        const projectId = 'techfix-8cb67';
 
         let localDb = { clients: [], orders: [] };
         let userUid = null;
 
-        // --- AUTENTICAÇÃO ---
+        // --- INICIALIZAÇÃO DE AUTENTICAÇÃO ---
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } catch (err) {
+                    await signInAnonymously(auth);
+                }
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        // Escuta mudanças no estado de autenticação
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 userUid = user.uid;
                 const status = document.getElementById('connection-status');
                 status.innerText = "● Cloud Sync Ativo";
-                status.className = "text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full uppercase font-bold animate-none";
+                status.className = "text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full uppercase font-bold animate-none border border-green-200";
                 startSync();
             } else {
-                signInAnonymously(auth);
+                initAuth();
             }
         });
 
-        // --- SINCRONIZAÇÃO ---
+        // --- SINCRONIZAÇÃO EM TEMPO REAL ---
         function startSync() {
             if (!userUid) return;
-            const userPath = ['artifacts', projectId, 'users', userUid];
 
-            // Clientes
-            onSnapshot(collection(dbFirestore, ...userPath, 'clients'), (snap) => {
+            // MANDATORY RULE 1: Strict paths /artifacts/{appId}/users/{userId}/{collectionName}
+            const clientsRef = collection(dbFirestore, 'artifacts', appId, 'users', userUid, 'clients');
+            const ordersRef = collection(dbFirestore, 'artifacts', appId, 'users', userUid, 'orders');
+
+            // Escutar Clientes
+            onSnapshot(clientsRef, (snap) => {
                 localDb.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 window.renderClients();
                 updateClientSelect();
                 window.renderDashboard();
+            }, (err) => {
+                console.error("Erro sync clientes:", err);
             });
 
-            // Ordens
-            onSnapshot(collection(dbFirestore, ...userPath, 'orders'), (snap) => {
+            // Escutar Ordens
+            onSnapshot(ordersRef, (snap) => {
                 localDb.orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 window.renderOrders();
                 window.renderDashboard();
                 window.renderFinancial();
+            }, (err) => {
+                console.error("Erro sync ordens:", err);
             });
         }
 
@@ -260,24 +310,42 @@
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`nav-${id}`).classList.add('active');
+            const navBtn = document.getElementById(`nav-${id}`);
+            if (navBtn) navBtn.classList.add('active');
             const titles = { dashboard: 'Visão Geral', clients: 'Gestão de Clientes', orders: 'Ordens (OS)', financial: 'Financeiro', settings: 'Configurações' };
-            document.getElementById('page-title').innerText = titles[id];
+            document.getElementById('page-title').innerText = titles[id] || 'TechFix';
         };
 
         window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
         window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
 
+        // SALVAR CLIENTE
         window.saveClient = async (e) => {
             e.preventDefault();
-            const data = {
-                name: document.getElementById('c-name').value,
-                phone: document.getElementById('c-phone').value,
-                ts: Date.now()
-            };
-            await addDoc(collection(dbFirestore, 'artifacts', projectId, 'users', userUid, 'clients'), data);
-            window.closeModal('modal-client');
-            e.target.reset();
+            if (!userUid) return alert("Aguarde a ligação Cloud...");
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = "A SALVAR...";
+            btn.disabled = true;
+
+            try {
+                const data = {
+                    name: document.getElementById('c-name').value,
+                    phone: document.getElementById('c-phone').value,
+                    ts: Date.now()
+                };
+                // SALVAR USANDO O CAMINHO CORRETO
+                await addDoc(collection(dbFirestore, 'artifacts', appId, 'users', userUid, 'clients'), data);
+                window.closeModal('modal-client');
+                e.target.reset();
+            } catch (err) {
+                console.error("Erro ao salvar cliente:", err);
+                alert("Erro de permissão ou ligação. Verifique os logs.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         };
 
         window.openOrderModal = () => {
@@ -288,45 +356,68 @@
 
         window.saveOrder = async (e) => {
             e.preventDefault();
-            const sel = document.getElementById('os-client-select');
-            const data = {
-                clientId: sel.value,
-                clientName: sel.options[sel.selectedIndex].text,
-                device: document.getElementById('os-device').value,
-                cost: parseFloat(document.getElementById('os-cost').value || 0),
-                price: parseFloat(document.getElementById('os-price').value || 0),
-                problem: document.getElementById('os-problem').value,
-                status: 'aberto',
-                date: new Date().toLocaleDateString('pt-BR'),
-                ts: Date.now()
-            };
-            await addDoc(collection(dbFirestore, 'artifacts', projectId, 'users', userUid, 'orders'), data);
-            window.closeModal('modal-order');
+            if (!userUid) return alert("Aguarde a ligação Cloud...");
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerText = "A LANÇAR...";
+
+            try {
+                const sel = document.getElementById('os-client-select');
+                const data = {
+                    clientId: sel.value,
+                    clientName: sel.options[sel.selectedIndex].text,
+                    device: document.getElementById('os-device').value,
+                    cost: parseFloat(document.getElementById('os-cost').value || 0),
+                    price: parseFloat(document.getElementById('os-price').value || 0),
+                    problem: document.getElementById('os-problem').value,
+                    status: 'aberto',
+                    date: new Date().toLocaleDateString('pt-BR'),
+                    ts: Date.now()
+                };
+                // SALVAR USANDO O CAMINHO CORRETO
+                await addDoc(collection(dbFirestore, 'artifacts', appId, 'users', userUid, 'orders'), data);
+                window.closeModal('modal-order');
+            } catch (err) {
+                alert("Erro ao criar OS: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "CRIAR OS NA NUVEM";
+            }
         };
 
         window.updateStatus = async (id, status) => {
-            await updateDoc(doc(dbFirestore, 'artifacts', projectId, 'users', userUid, 'orders', id), { status });
+            if (!userUid) return;
+            try {
+                await updateDoc(doc(dbFirestore, 'artifacts', appId, 'users', userUid, 'orders', id), { status });
+            } catch (err) { alert("Erro ao atualizar status."); }
         };
 
         window.deleteOrder = async (id) => {
-            if(confirm("Apagar OS permanentemente?")) await deleteDoc(doc(dbFirestore, 'artifacts', projectId, 'users', userUid, 'orders', id));
+            if (!userUid) return;
+            if(confirm("Apagar OS permanentemente da nuvem?")) {
+                await deleteDoc(doc(dbFirestore, 'artifacts', appId, 'users', userUid, 'orders', id));
+            }
         };
 
         window.deleteClient = async (id) => {
-            if(confirm("Apagar cliente?")) await deleteDoc(doc(dbFirestore, 'artifacts', projectId, 'users', userUid, 'clients', id));
+            if (!userUid) return;
+            if(confirm("Apagar cliente?")) {
+                await deleteDoc(doc(dbFirestore, 'artifacts', appId, 'users', userUid, 'clients', id));
+            }
         };
 
-        // --- RENDERIZAÇÃO ---
+        // --- RENDERS ---
         window.renderClients = () => {
             const list = document.getElementById('clients-list');
             const search = document.getElementById('search-client').value.toLowerCase();
             const filtered = localDb.clients.filter(c => c.name.toLowerCase().includes(search));
             list.innerHTML = filtered.map(c => `
-                <tr class="border-b hover:bg-gray-50">
+                <tr class="border-b hover:bg-gray-50 transition">
                     <td class="p-4 font-bold text-slate-700">${c.name}</td>
                     <td class="p-4 text-slate-500">${c.phone}</td>
                     <td class="p-4 text-right">
-                        <button onclick="window.deleteClient('${c.id}')" class="text-red-300 hover:text-red-600 transition"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="window.deleteClient('${c.id}')" class="text-red-300 hover:text-red-600 transition p-2"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -340,7 +431,10 @@
             list.innerHTML = filtered.sort((a,b) => b.ts - a.ts).map(o => `
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 transition hover:shadow-md">
                     <div class="flex-1">
-                        <h4 class="font-bold text-slate-800 text-lg">${o.device}</h4>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-black uppercase">OS Ativa</span>
+                            <h4 class="font-bold text-slate-800 text-lg">${o.device}</h4>
+                        </div>
                         <p class="text-sm text-gray-500">Cliente: <b>${o.clientName}</b> | Entrada: ${o.date}</p>
                     </div>
                     <div class="flex items-center gap-4">
@@ -353,10 +447,10 @@
                             <p class="text-[10px] text-gray-400 uppercase font-bold">Total</p>
                             <p class="font-bold text-slate-800">R$ ${o.price.toFixed(2)}</p>
                         </div>
-                        <button onclick="window.deleteOrder('${o.id}')" class="text-red-100 hover:text-red-500 text-lg"><i class="fas fa-times-circle"></i></button>
+                        <button onclick="window.deleteOrder('${o.id}')" class="text-red-100 hover:text-red-500 text-lg p-2"><i class="fas fa-times-circle"></i></button>
                     </div>
                 </div>
-            `).join('') || '<p class="text-center p-12 text-gray-400">Sem ordens registadas.</p>';
+            `).join('') || '<p class="text-center p-12 text-gray-400 italic">Nenhuma OS registada na nuvem.</p>';
         };
 
         window.renderFinancial = () => {
@@ -364,7 +458,7 @@
             const profit = finished.reduce((acc, curr) => acc + (curr.price - curr.cost), 0);
             document.getElementById('fin-total').innerText = `R$ ${profit.toFixed(2)}`;
             document.getElementById('financial-list').innerHTML = finished.map(o => `
-                <tr class="border-b"><td class="p-4 font-bold text-slate-700">${o.device}</td><td class="p-4 text-right font-black text-green-600">R$ ${(o.price - o.cost).toFixed(2)}</td></tr>
+                <tr class="border-b hover:bg-green-50"><td class="p-4 font-bold text-slate-700">${o.device}</td><td class="p-4 text-right font-black text-green-600">R$ ${(o.price - o.cost).toFixed(2)}</td></tr>
             `).join('');
         };
 
@@ -372,10 +466,6 @@
             document.getElementById('dash-open-count').innerText = localDb.orders.filter(o => o.status === 'aberto').length;
             document.getElementById('dash-ready-count').innerText = localDb.orders.filter(o => o.status === 'pronto').length;
             document.getElementById('dash-client-count').innerText = localDb.clients.length;
-            
-            const finished = localDb.orders.filter(o => o.status === 'pronto' || o.status === 'entregue');
-            const totalRev = finished.reduce((acc, curr) => acc + curr.price, 0);
-            document.getElementById('dash-revenue').innerText = `R$ ${totalRev.toFixed(2)}`;
         };
 
         function updateClientSelect() {
